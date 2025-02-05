@@ -1,0 +1,613 @@
+state,year,name,value
+alabama,2024,rep_votes,1462616
+alabama,2024,dem_votes,772412
+alabama,2024,total_votes,2265090
+alaska,2024,rep_votes,184458
+alaska,2024,dem_votes,140026
+alaska,2024,total_votes,338177
+arizona,2024,rep_votes,1770242
+arizona,2024,dem_votes,1582860
+arizona,2024,total_votes,3390161
+arkansas,2024,rep_votes,759241
+arkansas,2024,dem_votes,396905
+arkansas,2024,total_votes,1182676
+california,2024,rep_votes,6081697
+california,2024,dem_votes,9276179
+california,2024,total_votes,15865475
+colorado,2024,rep_votes,1377441
+colorado,2024,dem_votes,1728159
+colorado,2024,total_votes,3192745
+connecticut,2024,rep_votes,736918
+connecticut,2024,dem_votes,992053
+connecticut,2024,total_votes,1759010
+delaware,2024,rep_votes,214351
+delaware,2024,dem_votes,289758
+delaware,2024,total_votes,512912
+district of columbia,2024,rep_votes,21076
+district of columbia,2024,dem_votes,294185
+district of columbia,2024,total_votes,325869
+florida,2024,rep_votes,6110125
+florida,2024,dem_votes,4683038
+florida,2024,total_votes,10893752
+georgia,2024,rep_votes,2663117
+georgia,2024,dem_votes,2548017
+georgia,2024,total_votes,5250047
+hawaii,2024,rep_votes,193661
+hawaii,2024,dem_votes,313044
+hawaii,2024,total_votes,516701
+idaho,2024,rep_votes,605246
+idaho,2024,dem_votes,274972
+idaho,2024,total_votes,904812
+illinois,2024,rep_votes,2449079
+illinois,2024,dem_votes,3062863
+illinois,2024,total_votes,5633310
+indiana,2024,rep_votes,1720347
+indiana,2024,dem_votes,1163603
+indiana,2024,total_votes,2936605
+iowa,2024,rep_votes,927019
+iowa,2024,dem_votes,707278
+iowa,2024,total_votes,1663506
+kansas,2024,rep_votes,758802
+kansas,2024,dem_votes,544853
+kansas,2024,total_votes,1327591
+kentucky,2024,rep_votes,1337494
+kentucky,2024,dem_votes,704043
+kentucky,2024,total_votes,2074530
+louisiana,2024,rep_votes,1208505
+louisiana,2024,dem_votes,766870
+louisiana,2024,total_votes,2006975
+maine,2024,rep_votes,377977
+maine,2024,dem_votes,435652
+maine,2024,total_votes,831375
+maryland,2024,rep_votes,1035550
+maryland,2024,dem_votes,1902577
+maryland,2024,total_votes,3038334
+massachusetts,2024,rep_votes,1251303
+massachusetts,2024,dem_votes,2126518
+massachusetts,2024,total_votes,3473668
+michigan,2024,rep_votes,2816636
+michigan,2024,dem_votes,2736533
+michigan,2024,total_votes,5664186
+minnesota,2024,rep_votes,1519032
+minnesota,2024,dem_votes,1656979
+minnesota,2024,total_votes,3253920
+mississippi,2024,rep_votes,747744
+mississippi,2024,dem_votes,466668
+mississippi,2024,total_votes,1228008
+missouri,2024,rep_votes,1751986
+missouri,2024,dem_votes,1200599
+missouri,2024,total_votes,2995327
+montana,2024,rep_votes,352079
+montana,2024,dem_votes,231906
+montana,2024,total_votes,602984
+nebraska,2024,rep_votes,564816
+nebraska,2024,dem_votes,369995
+nebraska,2024,total_votes,952182
+nevada,2024,rep_votes,751205
+nevada,2024,dem_votes,705197
+nevada,2024,total_votes,1484840
+new hampshire,2024,rep_votes,395523
+new hampshire,2024,dem_votes,418488
+new hampshire,2024,total_votes,826189
+new jersey,2024,rep_votes,1968215
+new jersey,2024,dem_votes,2220713
+new jersey,2024,total_votes,4272725
+new mexico,2024,rep_votes,423391
+new mexico,2024,dem_votes,478802
+new mexico,2024,total_votes,923403
+new york,2024,rep_votes,3578899
+new york,2024,dem_votes,4619195
+new york,2024,total_votes,8262495
+north carolina,2024,rep_votes,2898424
+north carolina,2024,dem_votes,2715378
+north carolina,2024,total_votes,5699145
+north dakota,2024,rep_votes,246505
+north dakota,2024,dem_votes,112327
+north dakota,2024,total_votes,368155
+ohio,2024,rep_votes,3180116
+ohio,2024,dem_votes,2533699
+ohio,2024,total_votes,5767788
+oklahoma,2024,rep_votes,1036213
+oklahoma,2024,dem_votes,499599
+oklahoma,2024,total_votes,1566173
+oregon,2024,rep_votes,919480
+oregon,2024,dem_votes,1240600
+oregon,2024,total_votes,2244493
+pennsylvania,2024,rep_votes,3543308
+pennsylvania,2024,dem_votes,3423042
+pennsylvania,2024,total_votes,7034206
+rhode island,2024,rep_votes,214406
+rhode island,2024,dem_votes,285156
+rhode island,2024,total_votes,513386
+south carolina,2024,rep_votes,1483747
+south carolina,2024,dem_votes,1028452
+south carolina,2024,total_votes,2548140
+south dakota,2024,rep_votes,272081
+south dakota,2024,dem_votes,146859
+south dakota,2024,total_votes,428922
+tennessee,2024,rep_votes,1966865
+tennessee,2024,dem_votes,1056265
+tennessee,2024,total_votes,3063942
+texas,2024,rep_votes,6393597
+texas,2024,dem_votes,4835250
+texas,2024,total_votes,11388674
+utah,2024,rep_votes,883818
+utah,2024,dem_votes,562566
+utah,2024,total_votes,1488043
+vermont,2024,rep_votes,119395
+vermont,2024,dem_votes,235791
+vermont,2024,total_votes,369422
+virginia,2024,rep_votes,2074097
+virginia,2024,dem_votes,2333778
+virginia,2024,total_votes,4503288
+washington,2024,rep_votes,1530923
+washington,2024,dem_votes,2245849
+washington,2024,total_votes,3924243
+west virginia,2024,rep_votes,533556
+west virginia,2024,dem_votes,214309
+west virginia,2024,total_votes,762584
+wisconsin,2024,rep_votes,1697626
+wisconsin,2024,dem_votes,1668229
+wisconsin,2024,total_votes,3422918
+wyoming,2024,rep_votes,192633
+wyoming,2024,dem_votes,69527
+wyoming,2024,total_votes,269048
+alabama,2020,rep_votes,1441170
+alabama,2020,dem_votes,849624
+alabama,2020,total_votes,2323282
+alaska,2020,rep_votes,189951
+alaska,2020,dem_votes,153778
+alaska,2020,total_votes,359530
+arizona,2020,rep_votes,1661686
+arizona,2020,dem_votes,1672143
+arizona,2020,total_votes,3387326
+arkansas,2020,rep_votes,760647
+arkansas,2020,dem_votes,423932
+arkansas,2020,total_votes,1219069
+california,2020,rep_votes,6006518
+california,2020,dem_votes,11110639
+california,2020,total_votes,17501380
+colorado,2020,rep_votes,1364607
+colorado,2020,dem_votes,1804352
+colorado,2020,total_votes,3256980
+connecticut,2020,rep_votes,714717
+connecticut,2020,dem_votes,1080831
+connecticut,2020,total_votes,1823857
+delaware,2020,rep_votes,200603
+delaware,2020,dem_votes,296268
+delaware,2020,total_votes,504346
+district of columbia,2020,rep_votes,18586
+district of columbia,2020,dem_votes,317323
+district of columbia,2020,total_votes,344356
+florida,2020,rep_votes,5668731
+florida,2020,dem_votes,5297045
+florida,2020,total_votes,11067456
+georgia,2020,rep_votes,2461854
+georgia,2020,dem_votes,2473633
+georgia,2020,total_votes,4999960
+hawaii,2020,rep_votes,196864
+hawaii,2020,dem_votes,366130
+hawaii,2020,total_votes,574469
+idaho,2020,rep_votes,554119
+idaho,2020,dem_votes,287021
+idaho,2020,total_votes,867934
+illinois,2020,rep_votes,2446891
+illinois,2020,dem_votes,3471915
+illinois,2020,total_votes,6033744
+indiana,2020,rep_votes,1729857
+indiana,2020,dem_votes,1242498
+indiana,2020,total_votes,3033210
+iowa,2020,rep_votes,897672
+iowa,2020,dem_votes,759061
+iowa,2020,total_votes,1690871
+kansas,2020,rep_votes,771406
+kansas,2020,dem_votes,570323
+kansas,2020,total_votes,1373986
+kentucky,2020,rep_votes,1326646
+kentucky,2020,dem_votes,772474
+kentucky,2020,total_votes,2136768
+louisiana,2020,rep_votes,1255776
+louisiana,2020,dem_votes,856034
+louisiana,2020,total_votes,2148062
+maine,2020,rep_votes,360737
+maine,2020,dem_votes,435072
+maine,2020,total_votes,819461
+maryland,2020,rep_votes,976414
+maryland,2020,dem_votes,1985023
+maryland,2020,total_votes,3037030
+massachusetts,2020,rep_votes,1167202
+massachusetts,2020,dem_votes,2382202
+massachusetts,2020,total_votes,3631402
+michigan,2020,rep_votes,2649852
+michigan,2020,dem_votes,2804040
+michigan,2020,total_votes,5539302
+minnesota,2020,rep_votes,1484065
+minnesota,2020,dem_votes,1717077
+minnesota,2020,total_votes,3277171
+mississippi,2020,rep_votes,756764
+mississippi,2020,dem_votes,539398
+mississippi,2020,total_votes,1313759
+missouri,2020,rep_votes,1718736
+missouri,2020,dem_votes,1253014
+missouri,2020,total_votes,3025962
+montana,2020,rep_votes,343602
+montana,2020,dem_votes,244786
+montana,2020,total_votes,603674
+nebraska,2020,rep_votes,556846
+nebraska,2020,dem_votes,374583
+nebraska,2020,total_votes,956383
+nevada,2020,rep_votes,669890
+nevada,2020,dem_votes,703486
+nevada,2020,total_votes,1405376
+new hampshire,2020,rep_votes,365660
+new hampshire,2020,dem_votes,424937
+new hampshire,2020,total_votes,806205
+new jersey,2020,rep_votes,1883313
+new jersey,2020,dem_votes,2608400
+new jersey,2020,total_votes,4549457
+new mexico,2020,rep_votes,401894
+new mexico,2020,dem_votes,501614
+new mexico,2020,total_votes,923965
+new york,2020,rep_votes,3251997
+new york,2020,dem_votes,5244886
+new york,2020,total_votes,8616861
+north carolina,2020,rep_votes,2758775
+north carolina,2020,dem_votes,2684292
+north carolina,2020,total_votes,5524804
+north dakota,2020,rep_votes,235751
+north dakota,2020,dem_votes,115042
+north dakota,2020,total_votes,362024
+ohio,2020,rep_votes,3154834
+ohio,2020,dem_votes,2679165
+ohio,2020,total_votes,5922202
+oklahoma,2020,rep_votes,1020280
+oklahoma,2020,dem_votes,503890
+oklahoma,2020,total_votes,1560699
+oregon,2020,rep_votes,958448
+oregon,2020,dem_votes,1340383
+oregon,2020,total_votes,2374321
+pennsylvania,2020,rep_votes,3377674
+pennsylvania,2020,dem_votes,3458229
+pennsylvania,2020,total_votes,6936976
+rhode island,2020,rep_votes,199922
+rhode island,2020,dem_votes,307486
+rhode island,2020,total_votes,517757
+south carolina,2020,rep_votes,1385103
+south carolina,2020,dem_votes,1091541
+south carolina,2020,total_votes,2513329
+south dakota,2020,rep_votes,261043
+south dakota,2020,dem_votes,150471
+south dakota,2020,total_votes,422609
+tennessee,2020,rep_votes,1852475
+tennessee,2020,dem_votes,1143711
+tennessee,2020,total_votes,3053851
+texas,2020,rep_votes,5890347
+texas,2020,dem_votes,5259126
+texas,2020,total_votes,11315056
+utah,2020,rep_votes,865140
+utah,2020,dem_votes,560282
+utah,2020,total_votes,1488289
+vermont,2020,rep_votes,112704
+vermont,2020,dem_votes,242820
+vermont,2020,total_votes,367428
+virginia,2020,rep_votes,1962430
+virginia,2020,dem_votes,2413568
+virginia,2020,total_votes,4460524
+washington,2020,rep_votes,1584651
+washington,2020,dem_votes,2369612
+washington,2020,total_votes,4087631
+west virginia,2020,rep_votes,545382
+west virginia,2020,dem_votes,235984
+west virginia,2020,total_votes,794731
+wisconsin,2020,rep_votes,1610184
+wisconsin,2020,dem_votes,1630866
+wisconsin,2020,total_votes,3298041
+wyoming,2020,rep_votes,193559
+wyoming,2020,dem_votes,73491
+wyoming,2020,total_votes,276765
+alabama,2016,rep_votes,1318255
+alabama,2016,dem_votes,729547
+alabama,2016,total_votes,2123372
+alaska,2016,rep_votes,163387
+alaska,2016,dem_votes,116454
+alaska,2016,total_votes,318608
+arizona,2016,rep_votes,1252401
+arizona,2016,dem_votes,1161167
+arizona,2016,total_votes,2604657
+arkansas,2016,rep_votes,684872
+arkansas,2016,dem_votes,380494
+arkansas,2016,total_votes,1130676
+california,2016,rep_votes,4483810
+california,2016,dem_votes,8753788
+california,2016,total_votes,14181595
+colorado,2016,rep_votes,1202484
+colorado,2016,dem_votes,1338870
+colorado,2016,total_votes,2780247
+connecticut,2016,rep_votes,673215
+connecticut,2016,dem_votes,897572
+connecticut,2016,total_votes,1644920
+delaware,2016,rep_votes,185127
+delaware,2016,dem_votes,235603
+delaware,2016,total_votes,443814
+district of columbia,2016,rep_votes,12723
+district of columbia,2016,dem_votes,282830
+district of columbia,2016,total_votes,311268
+florida,2016,rep_votes,4617886
+florida,2016,dem_votes,4504975
+florida,2016,total_votes,9420039
+georgia,2016,rep_votes,2089104
+georgia,2016,dem_votes,1877963
+georgia,2016,total_votes,4114732
+hawaii,2016,rep_votes,128847
+hawaii,2016,dem_votes,266891
+hawaii,2016,total_votes,428937
+idaho,2016,rep_votes,409055
+idaho,2016,dem_votes,189765
+idaho,2016,total_votes,690255
+illinois,2016,rep_votes,2146015
+illinois,2016,dem_votes,3090729
+illinois,2016,total_votes,5536424
+indiana,2016,rep_votes,1557286
+indiana,2016,dem_votes,1033126
+indiana,2016,total_votes,2734958
+iowa,2016,rep_votes,800983
+iowa,2016,dem_votes,653669
+iowa,2016,total_votes,1566031
+kansas,2016,rep_votes,671018
+kansas,2016,dem_votes,427005
+kansas,2016,total_votes,1184402
+kentucky,2016,rep_votes,1202971
+kentucky,2016,dem_votes,628854
+kentucky,2016,total_votes,1924149
+louisiana,2016,rep_votes,1178638
+louisiana,2016,dem_votes,780154
+louisiana,2016,total_votes,2029032
+maine,2016,rep_votes,335593
+maine,2016,dem_votes,357735
+maine,2016,total_votes,747927
+maryland,2016,rep_votes,943169
+maryland,2016,dem_votes,1677928
+maryland,2016,total_votes,2781446
+massachusetts,2016,rep_votes,1090893
+massachusetts,2016,dem_votes,1995196
+massachusetts,2016,total_votes,3325046
+michigan,2016,rep_votes,2279543
+michigan,2016,dem_votes,2268839
+michigan,2016,total_votes,4799284
+minnesota,2016,rep_votes,1322951
+minnesota,2016,dem_votes,1367716
+minnesota,2016,total_votes,2944813
+mississippi,2016,rep_votes,700714
+mississippi,2016,dem_votes,485131
+mississippi,2016,total_votes,1209357
+missouri,2016,rep_votes,1594511
+missouri,2016,dem_votes,1071068
+missouri,2016,total_votes,2808605
+montana,2016,rep_votes,279240
+montana,2016,dem_votes,177709
+montana,2016,total_votes,497147
+nebraska,2016,rep_votes,495961
+nebraska,2016,dem_votes,284494
+nebraska,2016,total_votes,844227
+nevada,2016,rep_votes,512058
+nevada,2016,dem_votes,539260
+nevada,2016,total_votes,1125385
+new hampshire,2016,rep_votes,345790
+new hampshire,2016,dem_votes,348526
+new hampshire,2016,total_votes,744296
+new jersey,2016,rep_votes,1601933
+new jersey,2016,dem_votes,2148278
+new jersey,2016,total_votes,3874046
+new mexico,2016,rep_votes,319667
+new mexico,2016,dem_votes,385234
+new mexico,2016,total_votes,798319
+new york,2016,rep_votes,2819534
+new york,2016,dem_votes,4556124
+new york,2016,total_votes,7721453
+north carolina,2016,rep_votes,2362631
+north carolina,2016,dem_votes,2189316
+north carolina,2016,total_votes,4741564
+north dakota,2016,rep_votes,216794
+north dakota,2016,dem_votes,93758
+north dakota,2016,total_votes,344360
+ohio,2016,rep_votes,2841005
+ohio,2016,dem_votes,2394164
+ohio,2016,total_votes,5496487
+oklahoma,2016,rep_votes,949136
+oklahoma,2016,dem_votes,420375
+oklahoma,2016,total_votes,1452992
+oregon,2016,rep_votes,782403
+oregon,2016,dem_votes,1002106
+oregon,2016,total_votes,2001336
+pennsylvania,2016,rep_votes,2970733
+pennsylvania,2016,dem_votes,2926441
+pennsylvania,2016,total_votes,6165478
+rhode island,2016,rep_votes,180543
+rhode island,2016,dem_votes,252525
+rhode island,2016,total_votes,464144
+south carolina,2016,rep_votes,1155389
+south carolina,2016,dem_votes,855373
+south carolina,2016,total_votes,2103027
+south dakota,2016,rep_votes,227721
+south dakota,2016,dem_votes,117458
+south dakota,2016,total_votes,370093
+tennessee,2016,rep_votes,1522925
+tennessee,2016,dem_votes,870695
+tennessee,2016,total_votes,2508027
+texas,2016,rep_votes,4685047
+texas,2016,dem_votes,3877868
+texas,2016,total_votes,8969226
+utah,2016,rep_votes,515231
+utah,2016,dem_votes,310676
+utah,2016,total_votes,1131430
+vermont,2016,rep_votes,95369
+vermont,2016,dem_votes,178573
+vermont,2016,total_votes,315067
+virginia,2016,rep_votes,1769443
+virginia,2016,dem_votes,1981473
+virginia,2016,total_votes,3984631
+washington,2016,rep_votes,1221747
+washington,2016,dem_votes,1742718
+washington,2016,total_votes,3317019
+west virginia,2016,rep_votes,489371
+west virginia,2016,dem_votes,188794
+west virginia,2016,total_votes,714423
+wisconsin,2016,rep_votes,1405284
+wisconsin,2016,dem_votes,1382536
+wisconsin,2016,total_votes,2976150
+wyoming,2016,rep_votes,174419
+wyoming,2016,dem_votes,55973
+wyoming,2016,total_votes,255849
+alabama,2012,rep_votes,1255925
+alabama,2012,dem_votes,795696
+alabama,2012,total_votes,2074338
+alaska,2012,rep_votes,164676
+alaska,2012,dem_votes,122640
+alaska,2012,total_votes,300495
+arizona,2012,rep_votes,1233654
+arizona,2012,dem_votes,1025232
+arizona,2012,total_votes,2299254
+arkansas,2012,rep_votes,647744
+arkansas,2012,dem_votes,394409
+arkansas,2012,total_votes,1069468
+california,2012,rep_votes,4839958
+california,2012,dem_votes,7854285
+california,2012,total_votes,13038547
+colorado,2012,rep_votes,1185243
+colorado,2012,dem_votes,1323102
+colorado,2012,total_votes,2569518
+connecticut,2012,rep_votes,634892
+connecticut,2012,dem_votes,905083
+connecticut,2012,total_votes,1558960
+delaware,2012,rep_votes,165484
+delaware,2012,dem_votes,242584
+delaware,2012,total_votes,413921
+district of columbia,2012,rep_votes,21381
+district of columbia,2012,dem_votes,267070
+district of columbia,2012,total_votes,293764
+florida,2012,rep_votes,4163447
+florida,2012,dem_votes,4237756
+florida,2012,total_votes,8474179
+georgia,2012,rep_votes,2078688
+georgia,2012,dem_votes,1773827
+georgia,2012,total_votes,3900050
+hawaii,2012,rep_votes,121015
+hawaii,2012,dem_votes,306658
+hawaii,2012,total_votes,434697
+idaho,2012,rep_votes,420911
+idaho,2012,dem_votes,212787
+idaho,2012,total_votes,652274
+illinois,2012,rep_votes,2135216
+illinois,2012,dem_votes,3019512
+illinois,2012,total_votes,5242014
+indiana,2012,rep_votes,1420543
+indiana,2012,dem_votes,1152887
+indiana,2012,total_votes,2624534
+iowa,2012,rep_votes,730617
+iowa,2012,dem_votes,822544
+iowa,2012,total_votes,1582180
+kansas,2012,rep_votes,692634
+kansas,2012,dem_votes,440726
+kansas,2012,total_votes,1159971
+kentucky,2012,rep_votes,1087190
+kentucky,2012,dem_votes,679370
+kentucky,2012,total_votes,1797212
+louisiana,2012,rep_votes,1152262
+louisiana,2012,dem_votes,809141
+louisiana,2012,total_votes,1994065
+maine,2012,rep_votes,292276
+maine,2012,dem_votes,401306
+maine,2012,total_votes,713180
+maryland,2012,rep_votes,971869
+maryland,2012,dem_votes,1677844
+maryland,2012,total_votes,2707327
+massachusetts,2012,rep_votes,1188314
+massachusetts,2012,dem_votes,1921290
+massachusetts,2012,total_votes,3167767
+michigan,2012,rep_votes,2115256
+michigan,2012,dem_votes,2564569
+michigan,2012,total_votes,4730961
+minnesota,2012,rep_votes,1320225
+minnesota,2012,dem_votes,1546167
+minnesota,2012,total_votes,2936561
+mississippi,2012,rep_votes,710746
+mississippi,2012,dem_votes,562949
+mississippi,2012,total_votes,1285584
+missouri,2012,rep_votes,1482440
+missouri,2012,dem_votes,1223796
+missouri,2012,total_votes,2757323
+montana,2012,rep_votes,267928
+montana,2012,dem_votes,201839
+montana,2012,total_votes,484048
+nebraska,2012,rep_votes,475064
+nebraska,2012,dem_votes,302081
+nebraska,2012,total_votes,794379
+nevada,2012,rep_votes,463567
+nevada,2012,dem_votes,531373
+nevada,2012,total_votes,1014918
+new hampshire,2012,rep_votes,329918
+new hampshire,2012,dem_votes,369561
+new hampshire,2012,total_votes,710972
+new jersey,2012,rep_votes,1477568
+new jersey,2012,dem_votes,2125101
+new jersey,2012,total_votes,3640292
+new mexico,2012,rep_votes,335788
+new mexico,2012,dem_votes,415335
+new mexico,2012,total_votes,783758
+new york,2012,rep_votes,2490431
+new york,2012,dem_votes,4485741
+new york,2012,total_votes,7081159
+north carolina,2012,rep_votes,2270395
+north carolina,2012,dem_votes,2178391
+north carolina,2012,total_votes,4505372
+north dakota,2012,rep_votes,188163
+north dakota,2012,dem_votes,124827
+north dakota,2012,total_votes,322627
+ohio,2012,rep_votes,2661437
+ohio,2012,dem_votes,2827709
+ohio,2012,total_votes,5580847
+oklahoma,2012,rep_votes,891325
+oklahoma,2012,dem_votes,443547
+oklahoma,2012,total_votes,1334872
+oregon,2012,rep_votes,754175
+oregon,2012,dem_votes,970488
+oregon,2012,total_votes,1789270
+pennsylvania,2012,rep_votes,2680434
+pennsylvania,2012,dem_votes,2990274
+pennsylvania,2012,total_votes,5753670
+rhode island,2012,rep_votes,157204
+rhode island,2012,dem_votes,279677
+rhode island,2012,total_votes,446049
+south carolina,2012,rep_votes,1071645
+south carolina,2012,dem_votes,865941
+south carolina,2012,total_votes,1964118
+south dakota,2012,rep_votes,210610
+south dakota,2012,dem_votes,145039
+south dakota,2012,total_votes,363815
+tennessee,2012,rep_votes,1462330
+tennessee,2012,dem_votes,960709
+tennessee,2012,total_votes,2458577
+texas,2012,rep_votes,4569843
+texas,2012,dem_votes,3308124
+texas,2012,total_votes,7993851
+utah,2012,rep_votes,740600
+utah,2012,dem_votes,251813
+utah,2012,total_votes,1017440
+vermont,2012,rep_votes,92698
+vermont,2012,dem_votes,199239
+vermont,2012,total_votes,299290
+virginia,2012,rep_votes,1822522
+virginia,2012,dem_votes,1971820
+virginia,2012,total_votes,3854489
+washington,2012,rep_votes,1290670
+washington,2012,dem_votes,1755396
+washington,2012,total_votes,3125516
+west virginia,2012,rep_votes,417655
+west virginia,2012,dem_votes,238269
+west virginia,2012,total_votes,670438
+wisconsin,2012,rep_votes,1407966
+wisconsin,2012,dem_votes,1620985
+wisconsin,2012,total_votes,3068434
+wyoming,2012,rep_votes,170962
+wyoming,2012,dem_votes,69286
+wyoming,2012,total_votes,249061
