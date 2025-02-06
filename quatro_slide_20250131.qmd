@@ -79,7 +79,7 @@ df_dif_rate <- df |>
 
 ## Arizona
 
-![Arizona](arizona.jpg)
+![Arizona](arizona.png)
 
 ## Stadium Locations in the United States
 ```{r}

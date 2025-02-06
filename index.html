@@ -1,0 +1,1780 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="index_files/libs/clipboard/clipboard.min.js"></script>
+<script src="index_files/libs/quarto-html/tabby.min.js"></script>
+<script src="index_files/libs/quarto-html/popper.min.js"></script>
+<script src="index_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="index_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="index_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="index_files/libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.6.40">
+
+  <title>パネルデータでアメリカ大統領選を解析する</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="index_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="index_files/libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="index_files/libs/revealjs/dist/theme/quarto-bbe7401fe57d4b791b917637bb662036.css">
+  <link href="index_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="index_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="index_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="index_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+  <script src="index_files/libs/kePrint-0.0.1/kePrint.js"></script>
+
+  <link href="index_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
+  <link href="index_files/libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+
+  <script src="index_files/libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+
+  <script src="index_files/libs/plotly-binding-4.10.4/plotly.js"></script>
+
+  <script src="index_files/libs/typedarray-0.1/typedarray.min.js"></script>
+
+  <script src="index_files/libs/jquery-3.5.1/jquery.min.js"></script>
+
+  <link href="index_files/libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
+
+  <script src="index_files/libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+
+  <link href="index_files/libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet">
+
+  <script src="index_files/libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
+
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">パネルデータでアメリカ大統領選を解析する</h1>
+  <p class="subtitle"><span class="citation" data-cites="higeme">@higeme</span></p>
+
+<div class="quarto-title-authors">
+</div>
+
+</section>
+<section id="自己紹介" class="slide level2">
+<h2>自己紹介</h2>
+<ul>
+<li><p>早稲田大学第一文学部演劇専修卒業（当時所沢市山口在住）</p></li>
+<li><p>佐久長聖中学・高等学校（国語科教諭）</p></li>
+<li><p>病院に転職。その後医療関係の職を転々とする。</p></li>
+<li><p>医療法人丸山会　丸子中央病院　経営企画課</p></li>
+<li><p>国立大学法人信州大学大学院経済学分野修了</p></li>
+<li><p>信州木曽看護専門学校非常勤講師（看護研究　統計学）</p></li>
+<li><p>（資格）統計検定２級取得、準1級勉強中。JDLA Deep Learning for GENERAL 2023 #1</p></li>
+</ul>
+</section>
+<section id="arizona" class="slide level2">
+<h2>Arizona</h2>
+
+<img data-src="arizona.png" class="r-stretch quarto-figure-center"><p class="caption">Arizona</p></section>
+<section id="stadium-locations-in-the-united-states" class="slide level2">
+<h2>Stadium Locations in the United States</h2>
+
+<img data-src="index_files/figure-revealjs/unnamed-chunk-2-1.png" width="960" class="r-stretch"></section>
+<section id="r言語advent-calendar-2024-21日目" class="slide level2">
+<h2>R言語Advent Calendar 2024　21日目</h2>
+<p><a href="https://qiita.com/hige_megane/items/062fcf108b1cd8ba056d">https://qiita.com/hige_megane/items/062fcf108b1cd8ba056d</a></p>
+<p>「多くの人が共和党圧勝だったというが、本当は僅差だった」は本当にそうか自分で視覚化したくなりました。そこで、年末年始、しこしことRでプログラム組んでみました。私のような初心者が地図に選挙の勝敗具合を色分けするなんて、生成AIのない時代なら考えられないことで、chatGPTが出てわずか2年余りなのに隔世の感がありますね。</p>
+</section>
+<section id="usaの地図に得票率を塗り分けるrコード" class="slide level2">
+<h2>USAの地図に得票率を塗り分けるRコード</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a><span class="co"># アメリカの州境界データを取得</span></span>
+<span id="cb1-2"><a href=""></a>states_map <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(maps<span class="sc">::</span><span class="fu">map</span>(<span class="st">"state"</span>, <span class="at">plot =</span> <span class="cn">FALSE</span>, <span class="at">fill =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb1-3"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">state =</span> ID)</span>
+<span id="cb1-4"><a href=""></a>valid_states <span class="ot">&lt;-</span> states_map<span class="sc">$</span>state</span>
+<span id="cb1-5"><a href=""></a></span>
+<span id="cb1-6"><a href=""></a><span class="co">#alaskaとhawaiiの2州が除外されているか確認</span></span>
+<span id="cb1-7"><a href=""></a>df_deleted <span class="ot">&lt;-</span> <span class="fu">filter</span>(<span class="at">.data =</span> df_dif_rate, <span class="sc">!</span>state <span class="sc">%in%</span> valid_states)</span>
+<span id="cb1-8"><a href=""></a><span class="co">#2州を削除したデータフレーム</span></span>
+<span id="cb1-9"><a href=""></a>df_49 <span class="ot">&lt;-</span> <span class="fu">filter</span>(<span class="at">.data =</span> df_dif_rate, state <span class="sc">%in%</span> valid_states)</span>
+<span id="cb1-10"><a href=""></a><span class="co">#49州の緯度経度境界データをleft_join()で追加</span></span>
+<span id="cb1-11"><a href=""></a>df_n_percent <span class="ot">&lt;-</span> <span class="fu">left_join</span>(states_map, df_49, <span class="at">by =</span> <span class="st">"state"</span>)</span>
+<span id="cb1-12"><a href=""></a></span>
+<span id="cb1-13"><a href=""></a><span class="co">#塗分け比率を固定</span></span>
+<span id="cb1-14"><a href=""></a>dif_range <span class="ot">&lt;-</span> <span class="fu">range</span>(df_n_percent<span class="sc">$</span>dif)</span>
+<span id="cb1-15"><a href=""></a></span>
+<span id="cb1-16"><a href=""></a>df_2012 <span class="ot">&lt;-</span> <span class="fu">filter</span>(<span class="at">.data =</span> df_n_percent, year <span class="sc">==</span> <span class="dv">2012</span>)</span>
+<span id="cb1-17"><a href=""></a>us_map_plot_2012 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> df_2012) <span class="sc">+</span></span>
+<span id="cb1-18"><a href=""></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> dif), <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">size =</span> <span class="fl">0.2</span>) <span class="sc">+</span>  <span class="co"># difで塗り分け</span></span>
+<span id="cb1-19"><a href=""></a>  <span class="fu">scale_fill_gradient2</span>(<span class="at">low =</span> <span class="st">"blue"</span>, <span class="at">high =</span> <span class="st">"red"</span>, <span class="at">mid =</span> <span class="st">"white"</span>, <span class="at">midpoint =</span> <span class="dv">0</span>, </span>
+<span id="cb1-20"><a href=""></a>                       <span class="at">name =</span> <span class="st">"share values"</span>,</span>
+<span id="cb1-21"><a href=""></a>                       <span class="at">limits =</span> dif_range) <span class="sc">+</span>             <span class="co"># カラースケール</span></span>
+<span id="cb1-22"><a href=""></a>  <span class="fu">geom_sf_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> ID), </span>
+<span id="cb1-23"><a href=""></a>               <span class="at">size =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb1-24"><a href=""></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span>                                     <span class="co"># テーマを調整</span></span>
+<span id="cb1-25"><a href=""></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>)</span>
+<span id="cb1-26"><a href=""></a></span>
+<span id="cb1-27"><a href=""></a>df_2016 <span class="ot">&lt;-</span> <span class="fu">filter</span>(<span class="at">.data =</span> df_n_percent, year <span class="sc">==</span> <span class="dv">2016</span>)</span>
+<span id="cb1-28"><a href=""></a>us_map_plot_2016 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> df_2016) <span class="sc">+</span></span>
+<span id="cb1-29"><a href=""></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> dif), <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">size =</span> <span class="fl">0.2</span>) <span class="sc">+</span>  <span class="co"># difで塗り分け</span></span>
+<span id="cb1-30"><a href=""></a>  <span class="fu">scale_fill_gradient2</span>(<span class="at">low =</span> <span class="st">"blue"</span>, <span class="at">high =</span> <span class="st">"red"</span>, <span class="at">mid =</span> <span class="st">"white"</span>, <span class="at">midpoint =</span> <span class="dv">0</span>, </span>
+<span id="cb1-31"><a href=""></a>                       <span class="at">name =</span> <span class="st">"share values"</span>,</span>
+<span id="cb1-32"><a href=""></a>                       <span class="at">limits =</span> dif_range) <span class="sc">+</span>             <span class="co"># カラースケール</span></span>
+<span id="cb1-33"><a href=""></a>  <span class="fu">geom_sf_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> ID), </span>
+<span id="cb1-34"><a href=""></a>               <span class="at">size =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb1-35"><a href=""></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span>                                     <span class="co"># テーマを調整</span></span>
+<span id="cb1-36"><a href=""></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>)</span>
+<span id="cb1-37"><a href=""></a></span>
+<span id="cb1-38"><a href=""></a>df_2020 <span class="ot">&lt;-</span> <span class="fu">filter</span>(<span class="at">.data =</span> df_n_percent, year <span class="sc">==</span> <span class="dv">2020</span>)</span>
+<span id="cb1-39"><a href=""></a>us_map_plot_2020 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> df_2020) <span class="sc">+</span></span>
+<span id="cb1-40"><a href=""></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> dif), <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">size =</span> <span class="fl">0.2</span>) <span class="sc">+</span>  <span class="co"># difで塗り分け</span></span>
+<span id="cb1-41"><a href=""></a>  <span class="fu">scale_fill_gradient2</span>(<span class="at">low =</span> <span class="st">"blue"</span>, <span class="at">high =</span> <span class="st">"red"</span>, <span class="at">mid =</span> <span class="st">"white"</span>, <span class="at">midpoint =</span> <span class="dv">0</span>, </span>
+<span id="cb1-42"><a href=""></a>                       <span class="at">name =</span> <span class="st">"share values"</span>,</span>
+<span id="cb1-43"><a href=""></a>                       <span class="at">limits =</span> dif_range) <span class="sc">+</span>             <span class="co"># カラースケール</span></span>
+<span id="cb1-44"><a href=""></a>  <span class="fu">geom_sf_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> ID), </span>
+<span id="cb1-45"><a href=""></a>               <span class="at">size =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb1-46"><a href=""></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span>                                     <span class="co"># テーマを調整</span></span>
+<span id="cb1-47"><a href=""></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>)</span>
+<span id="cb1-48"><a href=""></a></span>
+<span id="cb1-49"><a href=""></a>df_2024 <span class="ot">&lt;-</span> <span class="fu">filter</span>(<span class="at">.data =</span> df_n_percent, year <span class="sc">==</span> <span class="dv">2024</span>)</span>
+<span id="cb1-50"><a href=""></a>us_map_plot_2024 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> df_2024) <span class="sc">+</span></span>
+<span id="cb1-51"><a href=""></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> dif), <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">size =</span> <span class="fl">0.2</span>) <span class="sc">+</span>  <span class="co"># difで塗り分け</span></span>
+<span id="cb1-52"><a href=""></a>  <span class="fu">scale_fill_gradient2</span>(<span class="at">low =</span> <span class="st">"blue"</span>, <span class="at">high =</span> <span class="st">"red"</span>, <span class="at">mid =</span> <span class="st">"white"</span>, <span class="at">midpoint =</span> <span class="dv">0</span>, </span>
+<span id="cb1-53"><a href=""></a>                       <span class="at">name =</span> <span class="st">"share values"</span>,</span>
+<span id="cb1-54"><a href=""></a>                       <span class="at">limits =</span> dif_range) <span class="sc">+</span>             <span class="co"># カラースケール</span></span>
+<span id="cb1-55"><a href=""></a>  <span class="fu">geom_sf_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> ID), </span>
+<span id="cb1-56"><a href=""></a>               <span class="at">size =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb1-57"><a href=""></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span>                                     <span class="co"># テーマを調整</span></span>
+<span id="cb1-58"><a href=""></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="年の選挙結果" class="slide level2">
+<h2>2012年の選挙結果</h2>
+
+<img data-src="index_files/figure-revealjs/unnamed-chunk-4-1.png" width="960" class="r-stretch"></section>
+<section id="年の選挙結果-1" class="slide level2">
+<h2>2016年の選挙結果</h2>
+
+<img data-src="index_files/figure-revealjs/unnamed-chunk-5-1.png" width="960" class="r-stretch"></section>
+<section id="年の選挙結果-2" class="slide level2">
+<h2>2020年の選挙結果</h2>
+
+<img data-src="index_files/figure-revealjs/unnamed-chunk-6-1.png" width="960" class="r-stretch"></section>
+<section id="年の選挙結果-3" class="slide level2">
+<h2>2024年の選挙結果</h2>
+
+<img data-src="index_files/figure-revealjs/unnamed-chunk-7-1.png" width="960" class="r-stretch"></section>
+<section id="私はなぜrを使うのか" class="slide level2">
+<h2>私はなぜRを使うのか</h2>
+<p>Rに愛着があるからです！が…</p>
+</section>
+<section id="何かrに対する唯ぼんやりとした不安" class="slide level2">
+<h2>何かRに対する唯ぼんやりとした不安</h2>
+<ul>
+<li>生成AIに尋ねると日本地図を塗り分けるためのlibraryは用意されているが、cranに登録されていない？.shpファイルを用意する必要があるが、適切なファイルを見つけることが案外難しい。</li>
+<li>utf-8（のみ）が得意なRを日本で使うメリットは？</li>
+</ul>
+</section>
+<section>
+<section id="rを使う意義はデータ解析にあり" class="title-slide slide level1 center">
+<h1>Rを使う意義は「データ解析」にあり！</h1>
+
+</section>
+<section id="アメリカ大統領選挙の投票結果データ" class="slide level2">
+<h2>アメリカ大統領選挙の投票結果データ</h2>
+<p>2012年、2016年、2020年、2024年の大統領選4回分のデータを<a href="https://en.wikipedia.org/wiki/2024_United_States_presidential_election">Wikipedia</a>より取得。</p>
+<p>2024年選挙は下記が最終結果と思われる。</p>
+<p>“2024 Presidential Election Results”. Associated Press. January 2, 2025. Retrieved January 2, 2025.</p>
+</section>
+<section id="データの概要" class="slide level2">
+<h2>データの概要</h2>
+<p>51州(District of Columbia含む) X</p>
+<p>共和党得票数、民主党得票数、総得票数 X</p>
+<p>2012～2024年のアメリカ大統領選4回。</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top" data-quarto-postprocess="true" style="margin-left: auto; margin-right: auto;">
+<caption>全612行 x 4列</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: left; font-weight: bold; color: black !important; background-color: rgba(204, 204, 204, 255) !important;">state</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold; color: black !important; background-color: rgba(204, 204, 204, 255) !important;">year</th>
+<th data-quarto-table-cell-role="th" style="text-align: left; font-weight: bold; color: black !important; background-color: rgba(204, 204, 204, 255) !important;">name</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold; color: black !important; background-color: rgba(204, 204, 204, 255) !important;">value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">alabama</td>
+<td style="text-align: right;">2024</td>
+<td style="text-align: left;">rep_votes</td>
+<td style="text-align: right;">1462616</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">alabama</td>
+<td style="text-align: right;">2024</td>
+<td style="text-align: left;">dem_votes</td>
+<td style="text-align: right;">772412</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">alabama</td>
+<td style="text-align: right;">2024</td>
+<td style="text-align: left;">total_votes</td>
+<td style="text-align: right;">2265090</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">alaska</td>
+<td style="text-align: right;">2024</td>
+<td style="text-align: left;">rep_votes</td>
+<td style="text-align: right;">184458</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">alaska</td>
+<td style="text-align: right;">2024</td>
+<td style="text-align: left;">dem_votes</td>
+<td style="text-align: right;">140026</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">alaska</td>
+<td style="text-align: right;">2024</td>
+<td style="text-align: left;">total_votes</td>
+<td style="text-align: right;">338177</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</div>
+</div>
+</section>
+<section id="アメリカ全州の投票結果" class="slide level2">
+<h2><strong>アメリカ全州の投票結果</strong></h2>
+<div class="cell">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top" data-quarto-postprocess="true" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">year</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">rep_votes</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">dem_votes</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">total_votes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">2012</td>
+<td style="text-align: right;">60933504</td>
+<td style="text-align: right;">65915795</td>
+<td style="text-align: right;">129085406</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2016</td>
+<td style="text-align: right;">62984825</td>
+<td style="text-align: right;">65853516</td>
+<td style="text-align: right;">136700770</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2020</td>
+<td style="text-align: right;">74223975</td>
+<td style="text-align: right;">81283501</td>
+<td style="text-align: right;">158429631</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2024</td>
+<td style="text-align: right;">77302581</td>
+<td style="text-align: right;">75017616</td>
+<td style="text-align: right;">155212150</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</div>
+</div>
+</section>
+<section id="全投票数に占める得票率" class="slide level2">
+<h2>全投票数に占める得票率</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top" data-quarto-postprocess="true" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">year</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">rep_rate</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">dem_rate</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">other_rate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">2012</td>
+<td style="text-align: right;">0.472</td>
+<td style="text-align: right;">0.511</td>
+<td style="text-align: right;">0.017</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2016</td>
+<td style="text-align: right;">0.461</td>
+<td style="text-align: right;">0.482</td>
+<td style="text-align: right;">0.058</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2020</td>
+<td style="text-align: right;">0.468</td>
+<td style="text-align: right;">0.513</td>
+<td style="text-align: right;">0.018</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2024</td>
+<td style="text-align: right;">0.498</td>
+<td style="text-align: right;">0.483</td>
+<td style="text-align: right;">0.019</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</div>
+</div>
+</section>
+<section id="主要2党の投票合計を1としたときの得票率" class="slide level2">
+<h2>主要2党の投票合計を1としたときの得票率</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top" data-quarto-postprocess="true" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">year</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">rep_rate</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">dem_rate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">2012</td>
+<td style="text-align: right;">0.480</td>
+<td style="text-align: right;">0.520</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2016</td>
+<td style="text-align: right;">0.489</td>
+<td style="text-align: right;">0.511</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2020</td>
+<td style="text-align: right;">0.477</td>
+<td style="text-align: right;">0.523</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2024</td>
+<td style="text-align: right;">0.508</td>
+<td style="text-align: right;">0.492</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</div>
+</div>
+</section></section>
+<section>
+<section id="時系列データはパネルデータにすることを考えよう" class="title-slide slide level1 center">
+<h1>時系列データはパネルデータにすることを考えよう！</h1>
+
+</section>
+<section id="パネルデータのメリット" class="slide level2">
+<h2>パネルデータのメリット</h2>
+<ul>
+<li><p>単純な時系列データ（1つの対象を時系列で見る）や横断データ（複数対象をある時点で見る）と比較して、パネルデータは「横断面 × 時系列」の両方の情報を含むため、サンプルサイズが増え、推定精度向上が期待できる。</p></li>
+<li><p>各個体固有の（しかし観測できない）特性をモデルで扱いやすくなる。</p></li>
+</ul>
+</section>
+<section id="パネルデータモデルの推定方法" class="slide level2">
+<h2>パネルデータモデルの推定方法</h2>
+<ol type="1">
+<li><p>pooling</p></li>
+<li><p>within</p></li>
+<li><p>random</p></li>
+</ol>
+</section>
+<section id="パネルデータモデルの推定方法1" class="slide level2">
+<h2>パネルデータモデルの推定方法1</h2>
+<ol type="1">
+<li>pooling（単純な回帰分析）</li>
+</ol>
+<ul>
+<li><p>縦断面（個体）の違いも時間的な違いも全く考慮せず、単純に「全てのデータを一括に」まとめて（プールして）回帰を行う方法。</p></li>
+<li><p>パネルデータをただの「大きな横断データ」あるいは「大きな時系列データ」のように扱う。</p></li>
+</ul>
+</section>
+<section id="パネルデータモデルの推定方法2" class="slide level2">
+<h2>パネルデータモデルの推定方法2</h2>
+<ol start="2" type="1">
+<li>within（固定効果モデル、FEM）</li>
+</ol>
+<ul>
+<li><p>各個体（今回は州）が持つ「観測されないが時間を通じて不変な特性」を固定効果とみなし、それをコントロールする。</p></li>
+<li><p>個体ごとに異なる「不変の特性」を取り除くため、観測されない要因によるバイアスを大きく減らせる。</p></li>
+<li><p>説明変数と個体効果が相関していても大丈夫だが、時間不変の変数が推定できない。</p></li>
+</ul>
+</section>
+<section id="パネルデータモデルの推定方法3" class="slide level2">
+<h2>パネルデータモデルの推定方法3</h2>
+<ol start="3" type="1">
+<li>random(変量効果モデル、REM)</li>
+</ol>
+<ul>
+<li><p>個体ごとの特性（個体効果）を「確率的（ランダム）なもの」とみなし、誤差項の一部として扱う。</p></li>
+<li><p>説明変数との無相関を仮定するため、その仮定が満たされれば効率的、満たされなければバイアスが生じる。</p></li>
+</ul>
+<p>→Hausman検定</p>
+</section>
+<section id="固定効果モデルと変量効果モデルの数式" class="slide level2">
+<h2>固定効果モデルと変量効果モデルの数式</h2>
+<p>個体（今回の場合は州）のindex<span class="math inline">\(: i = 1, 2, \dots , N\)</span></p>
+<p>時点のindex<span class="math inline">\(:t = 1, 2, \dots , T\)</span></p>
+<p>被説明変数<span class="math inline">\(:y_{it}\)</span></p>
+<p>説明変数ベクトル<span class="math inline">\(:x_{it}\)</span>（<span class="math inline">\(𝑘\)</span>次元）</p>
+<p>誤差項：<span class="math inline">\(u_{it}\)</span></p>
+</section>
+<section id="固定効果モデルfixed-effects-model" class="slide level2">
+<h2>固定効果モデル（Fixed Effects Model）</h2>
+<p>個体ごとの効果<span class="math inline">\(\alpha_i\)</span>を観測不可能だが固定パラメータとして推定する。</p>
+<p><span class="math inline">\(y_{it} = \alpha_i + x_{it} \beta + u_{it}\)</span></p>
+<p>各個体<span class="math inline">\(i\)</span>について時間平均を引くことで<span class="math inline">\(\alpha_i\)</span>を消去する。</p>
+<p><span class="math inline">\(y_{it} - \bar{y_i} = (\alpha_i - \alpha_i) + (x_{it}- \bar{x_i}) \beta + (u_{it} - \bar{u_i})\)</span></p>
+<p>個体不変の要因を除去の上通常のOLSを適用すれば<span class="math inline">\(\beta\)</span>の推定が可能。</p>
+</section>
+<section id="変量効果モデルrandom-effects-model" class="slide level2">
+<h2>変量効果モデル(Random Effects Model)</h2>
+<p>個体ごとの効果をランダムな確率変数<span class="math inline">\(\mu_i\)</span>で扱う。</p>
+<p><span class="math inline">\(y_{it} = \alpha + x_{it} \beta + \mu_i + u_{it} \quad | \quad Cov(\mu_i, x_{it}) = 0\)</span></p>
+<p>合成誤差項 <span class="math inline">\(\epsilon_{it} = \mu_i + u_{it}\)</span> で誤差項を考えるが、<span class="math inline">\(\mu_i\)</span>と<span class="math inline">\(u_{it}\)</span>は時点間で相関が生じるため、OLSではなくGLS（一般化最小二乗法）を用いて誤差構造を考慮しつつ<span class="math inline">\(\beta\)</span>を推定する。</p>
+<p><span class="math inline">\(\mu_i\)</span>がランダムのため、<span class="math inline">\(\beta\)</span>と分散パラメータ<span class="math inline">\(\sigma_\mu^2, \sigma_u^2\)</span>などを推定するだけですむ。</p>
+</section>
+<section id="パネルデータの作り方" class="slide level2">
+<h2>パネルデータの作り方</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href=""></a>df_dif_rate_2 <span class="ot">&lt;-</span> df_add <span class="sc">|&gt;</span> </span>
+<span id="cb2-2"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">fy2012 =</span> <span class="fu">if_else</span>(year <span class="sc">==</span> <span class="dv">2012</span>, <span class="dv">1</span>, <span class="dv">0</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb2-3"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">fy2016 =</span> <span class="fu">if_else</span>(year <span class="sc">==</span> <span class="dv">2016</span>, <span class="dv">1</span>, <span class="dv">0</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb2-4"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">fy2020 =</span> <span class="fu">if_else</span>(year <span class="sc">==</span> <span class="dv">2020</span>, <span class="dv">1</span>, <span class="dv">0</span>))</span>
+<span id="cb2-5"><a href=""></a>df_rep_100 <span class="ot">&lt;-</span> df_dif_rate_2 <span class="sc">|&gt;</span> </span>
+<span id="cb2-6"><a href=""></a>  <span class="fu">filter</span>(name <span class="sc">==</span> <span class="st">"rep_rate_100"</span>)</span>
+<span id="cb2-7"><a href=""></a><span class="fu">library</span>(plm)</span>
+<span id="cb2-8"><a href=""></a>plm_rep_100 <span class="ot">&lt;-</span> <span class="fu">pdata.frame</span>(df_rep_100, <span class="at">index =</span> <span class="fu">c</span>(<span class="st">"state"</span>, <span class="st">"year"</span>))</span>
+<span id="cb2-9"><a href=""></a><span class="fu">head</span>(plm_rep_100, <span class="at">n =</span> <span class="dv">12</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>               state year         name     value fy2012 fy2016 fy2020
+alabama-2012 alabama 2012 rep_rate_100 0.6121623      1      0      0
+alabama-2016 alabama 2016 rep_rate_100 0.6437414      0      1      0
+alabama-2020 alabama 2020 rep_rate_100 0.6291137      0      0      1
+alabama-2024 alabama 2024 rep_rate_100 0.6544061      0      0      0
+alaska-2012   alaska 2012 rep_rate_100 0.5731529      1      0      0
+alaska-2016   alaska 2016 rep_rate_100 0.5838565      0      1      0
+alaska-2020   alaska 2020 rep_rate_100 0.5526185      0      0      1
+alaska-2024   alaska 2024 rep_rate_100 0.5684656      0      0      0
+arizona-2012 arizona 2012 rep_rate_100 0.5461338      1      0      0
+arizona-2016 arizona 2016 rep_rate_100 0.5189002      0      1      0
+arizona-2020 arizona 2020 rep_rate_100 0.4984317      0      0      1
+arizona-2024 arizona 2024 rep_rate_100 0.5279416      0      0      0</code></pre>
+</div>
+</div>
+</section>
+<section id="回帰分析式" class="slide level2">
+<h2>回帰分析式</h2>
+<p><span class="math inline">\(n = \beta_0 + \beta_1 * fy12 + \beta_2 * fy16 + \beta_3 * fy20\)</span></p>
+<p>各年の値</p>
+<p><span class="math inline">\(n_{(fy12)} = \beta_0 + \beta_1 * fy12\)</span></p>
+<p><span class="math inline">\(n_{(fy16)} = \beta_0 + \beta_2 * fy16\)</span></p>
+<p><span class="math inline">\(n_{(fy20)} = \beta_0 + \beta_3 * fy20\)</span></p>
+<p><span class="math inline">\(n_{(fy24)} = \beta_0\)</span></p>
+</section>
+<section id="コードと結果目的変数repdem1としたときのrep_rate" class="slide level2">
+<h2>コードと結果(目的変数:rep+dem=1としたときのrep_rate)</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href=""></a>pooling_2024 <span class="ot">&lt;-</span> <span class="fu">plm</span>(value <span class="sc">~</span> fy2012 <span class="sc">+</span> fy2016 <span class="sc">+</span> fy2020,</span>
+<span id="cb4-2"><a href=""></a>                    <span class="at">data =</span> plm_rep_100, <span class="at">model =</span> <span class="st">"pooling"</span>)</span>
+<span id="cb4-3"><a href=""></a>within_2024 <span class="ot">&lt;-</span> <span class="fu">plm</span>(value <span class="sc">~</span> fy2012 <span class="sc">+</span> fy2016 <span class="sc">+</span> fy2020,</span>
+<span id="cb4-4"><a href=""></a>                   <span class="at">data =</span> plm_rep_100, <span class="at">model =</span> <span class="st">"within"</span>)</span>
+<span id="cb4-5"><a href=""></a>random_2024 <span class="ot">&lt;-</span> <span class="fu">plm</span>(value <span class="sc">~</span> fy2012 <span class="sc">+</span> fy2016 <span class="sc">+</span> fy2020,</span>
+<span id="cb4-6"><a href=""></a>                   <span class="at">data =</span> plm_rep_100, <span class="at">model =</span> <span class="st">"random"</span>)</span>
+<span id="cb4-7"><a href=""></a><span class="fu">stargazer</span>(pooling_2024, within_2024, random_2024, <span class="at">type =</span> <span class="st">"text"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+==================================================================
+                              Dependent variable:                 
+             -----------------------------------------------------
+                                     value                        
+                     (1)                   (2)              (3)   
+------------------------------------------------------------------
+fy2012             -0.025               -0.025***        -0.025***
+                   (0.024)               (0.004)          (0.004) 
+                                                                  
+fy2016             -0.005                -0.005           -0.005  
+                   (0.024)               (0.004)          (0.004) 
+                                                                  
+fy2020             -0.022               -0.022***        -0.022***
+                   (0.024)               (0.004)          (0.004) 
+                                                                  
+Constant          0.525***                               0.525*** 
+                   (0.017)                                (0.017) 
+                                                                  
+------------------------------------------------------------------
+Observations         204                   204              204   
+R2                  0.008                 0.261            0.210  
+Adjusted R2        -0.007                0.0004            0.198  
+F Statistic  0.515 (df = 3; 200) 17.693*** (df = 3; 150) 53.080***
+==================================================================
+Note:                                  *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01</code></pre>
+</div>
+</div>
+</section>
+<section id="f-test" class="slide level2">
+<h2>F test</h2>
+<p>個体効果の有無を検定。</p>
+<p><span class="math inline">\(H_0:\)</span> 個体効果が存在しない。→pooling</p>
+<p><span class="math inline">\(H_1:\)</span> 個体効果が存在する。→within</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href=""></a><span class="fu">pFtest</span>(within_2024, pooling_2024) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    F test for individual effects
+
+data:  value ~ fy2012 + fy2016 + fy2020
+F = 134.32, df1 = 50, df2 = 150, p-value &lt; 2.2e-16
+alternative hypothesis: significant effects</code></pre>
+</div>
+</div>
+</section>
+<section id="hausman-test" class="slide level2">
+<h2>Hausman test</h2>
+<p>個体効果と説明変数に相関があるかの検定。</p>
+<p><span class="math inline">\(H_0:\)</span> ランダム効果モデルは不偏かつ効率的。→random</p>
+<p><span class="math inline">\(H_1:\)</span> 個体効果と説明変数に相関がある。→within</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href=""></a><span class="fu">phtest</span>(within_2024, random_2024)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Hausman Test
+
+data:  value ~ fy2012 + fy2016 + fy2020
+chisq = 6.6658e-14, df = 3, p-value = 1
+alternative hypothesis: one model is inconsistent</code></pre>
+</div>
+</div>
+</section>
+<section id="多変量解析のだいご味はいろいろな指標をいれることにあり" class="slide level2">
+<h2>多変量解析のだいご味はいろいろな指標をいれることにあり</h2>
+<p>“Census”<a href="https://data.census.gov/">https://data.census.gov/</a>にアメリカ合衆国の各州の情報が掲載されている。</p>
+<ul>
+<li>人口（18歳以上人口）</li>
+<li>男女比</li>
+<li>年齢中央値</li>
+<li>白人比率</li>
+<li>黒人比率</li>
+<li>個人所得</li>
+</ul>
+</section>
+<section id="記述統計" class="slide level2">
+<h2>記述統計</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top" data-quarto-postprocess="true" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">name</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">ave</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">sd</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">med</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">max</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">min</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">over_18years_old</td>
+<td style="text-align: right;">5142480</td>
+<td style="text-align: right;">5823736</td>
+<td style="text-align: right;">3510313</td>
+<td style="text-align: right;">30527864</td>
+<td style="text-align: right;">454092</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">median_age</td>
+<td style="text-align: right;">39</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">39</td>
+<td style="text-align: right;">45</td>
+<td style="text-align: right;">32</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">males_per_100_females</td>
+<td style="text-align: right;">99</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">98</td>
+<td style="text-align: right;">111</td>
+<td style="text-align: right;">90</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">white_rate</td>
+<td style="text-align: right;">68</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">70</td>
+<td style="text-align: right;">91</td>
+<td style="text-align: right;">23</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">black_rate</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">41</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">personal_income</td>
+<td style="text-align: right;">68319</td>
+<td style="text-align: right;">10789</td>
+<td style="text-align: right;">66238</td>
+<td style="text-align: right;">106816</td>
+<td style="text-align: right;">49652</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</div>
+</div>
+</section>
+<section id="heat-map" class="slide level2">
+<h2>Heat Map</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-d7cdb45a3ab79f83256b" style="width:960px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-d7cdb45a3ab79f83256b">{"x":{"visdat":{"3e6472774c0f":["function () ","plotlyVisDat"]},"cur_data":"3e6472774c0f","attrs":{"3e6472774c0f":{"x":["over_18years_old","median_age","males_per_100_females","white_rate","black_rate","personal_income","over_18years_old","median_age","males_per_100_females","white_rate","black_rate","personal_income","over_18years_old","median_age","males_per_100_females","white_rate","black_rate","personal_income","over_18years_old","median_age","males_per_100_females","white_rate","black_rate","personal_income","over_18years_old","median_age","males_per_100_females","white_rate","black_rate","personal_income","over_18years_old","median_age","males_per_100_females","white_rate","black_rate","personal_income"],"y":["over_18years_old","over_18years_old","over_18years_old","over_18years_old","over_18years_old","over_18years_old","median_age","median_age","median_age","median_age","median_age","median_age","males_per_100_females","males_per_100_females","males_per_100_females","males_per_100_females","males_per_100_females","males_per_100_females","white_rate","white_rate","white_rate","white_rate","white_rate","white_rate","black_rate","black_rate","black_rate","black_rate","black_rate","black_rate","personal_income","personal_income","personal_income","personal_income","personal_income","personal_income"],"z":[1,-0.065784495280183375,-0.14514150648949237,-0.38718160880112851,0.12506512894667143,0.1303535587765286,-0.065784495280183375,1,-0.27494607541108435,0.20385356272282457,-0.12150100855879276,-0.10510435695885476,-0.14514150648949237,-0.27494607541108435,1,0.31369520442134585,-0.74426871174489728,-0.028370761212803842,-0.38718160880112851,0.20385356272282457,0.31369520442134585,1,-0.49961338839841879,-0.20105271984739484,0.12506512894667143,-0.12150100855879276,-0.74426871174489728,-0.49961338839841879,1,-9.2857598099327642e-05,0.1303535587765286,-0.10510435695885476,-0.028370761212803842,-0.20105271984739484,-9.2857598099327642e-05,1],"colorscale":"RdBu","zmin":-1,"zmax":1,"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"heatmap"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"Correlation Matrix Heatmap","xaxis":{"domain":[0,1],"automargin":true,"title":"","type":"category","categoryorder":"array","categoryarray":["over_18years_old","median_age","males_per_100_females","white_rate","black_rate","personal_income"]},"yaxis":{"domain":[0,1],"automargin":true,"title":"","type":"category","categoryorder":"array","categoryarray":["over_18years_old","median_age","males_per_100_females","white_rate","black_rate","personal_income"]},"annotations":[{"x":"over_18years_old","y":"over_18years_old","text":1,"showarrow":false,"font":{"color":"white"}},{"x":"median_age","y":"over_18years_old","text":-0.070000000000000007,"showarrow":false,"font":{"color":"white"}},{"x":"males_per_100_females","y":"over_18years_old","text":-0.14999999999999999,"showarrow":false,"font":{"color":"white"}},{"x":"white_rate","y":"over_18years_old","text":-0.39000000000000001,"showarrow":false,"font":{"color":"white"}},{"x":"black_rate","y":"over_18years_old","text":0.13,"showarrow":false,"font":{"color":"white"}},{"x":"personal_income","y":"over_18years_old","text":0.13,"showarrow":false,"font":{"color":"white"}},{"x":"over_18years_old","y":"median_age","text":-0.070000000000000007,"showarrow":false,"font":{"color":"white"}},{"x":"median_age","y":"median_age","text":1,"showarrow":false,"font":{"color":"white"}},{"x":"males_per_100_females","y":"median_age","text":-0.27000000000000002,"showarrow":false,"font":{"color":"white"}},{"x":"white_rate","y":"median_age","text":0.20000000000000001,"showarrow":false,"font":{"color":"white"}},{"x":"black_rate","y":"median_age","text":-0.12,"showarrow":false,"font":{"color":"white"}},{"x":"personal_income","y":"median_age","text":-0.11,"showarrow":false,"font":{"color":"white"}},{"x":"over_18years_old","y":"males_per_100_females","text":-0.14999999999999999,"showarrow":false,"font":{"color":"white"}},{"x":"median_age","y":"males_per_100_females","text":-0.27000000000000002,"showarrow":false,"font":{"color":"white"}},{"x":"males_per_100_females","y":"males_per_100_females","text":1,"showarrow":false,"font":{"color":"white"}},{"x":"white_rate","y":"males_per_100_females","text":0.31,"showarrow":false,"font":{"color":"white"}},{"x":"black_rate","y":"males_per_100_females","text":-0.73999999999999999,"showarrow":false,"font":{"color":"white"}},{"x":"personal_income","y":"males_per_100_females","text":-0.029999999999999999,"showarrow":false,"font":{"color":"white"}},{"x":"over_18years_old","y":"white_rate","text":-0.39000000000000001,"showarrow":false,"font":{"color":"white"}},{"x":"median_age","y":"white_rate","text":0.20000000000000001,"showarrow":false,"font":{"color":"white"}},{"x":"males_per_100_females","y":"white_rate","text":0.31,"showarrow":false,"font":{"color":"white"}},{"x":"white_rate","y":"white_rate","text":1,"showarrow":false,"font":{"color":"white"}},{"x":"black_rate","y":"white_rate","text":-0.5,"showarrow":false,"font":{"color":"white"}},{"x":"personal_income","y":"white_rate","text":-0.20000000000000001,"showarrow":false,"font":{"color":"white"}},{"x":"over_18years_old","y":"black_rate","text":0.13,"showarrow":false,"font":{"color":"white"}},{"x":"median_age","y":"black_rate","text":-0.12,"showarrow":false,"font":{"color":"white"}},{"x":"males_per_100_females","y":"black_rate","text":-0.73999999999999999,"showarrow":false,"font":{"color":"white"}},{"x":"white_rate","y":"black_rate","text":-0.5,"showarrow":false,"font":{"color":"white"}},{"x":"black_rate","y":"black_rate","text":1,"showarrow":false,"font":{"color":"white"}},{"x":"personal_income","y":"black_rate","text":-0,"showarrow":false,"font":{"color":"white"}},{"x":"over_18years_old","y":"personal_income","text":0.13,"showarrow":false,"font":{"color":"white"}},{"x":"median_age","y":"personal_income","text":-0.11,"showarrow":false,"font":{"color":"white"}},{"x":"males_per_100_females","y":"personal_income","text":-0.029999999999999999,"showarrow":false,"font":{"color":"white"}},{"x":"white_rate","y":"personal_income","text":-0.20000000000000001,"showarrow":false,"font":{"color":"white"}},{"x":"black_rate","y":"personal_income","text":-0,"showarrow":false,"font":{"color":"white"}},{"x":"personal_income","y":"personal_income","text":1,"showarrow":false,"font":{"color":"white"}}],"scene":{"zaxis":{"title":[]}},"hovermode":"closest","showlegend":false,"legend":{"yanchor":"top","y":0.5}},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"colorbar":{"title":"","ticklen":2,"len":0.5,"lenmode":"fraction","y":1,"yanchor":"top"},"colorscale":"RdBu","showscale":true,"x":["over_18years_old","median_age","males_per_100_females","white_rate","black_rate","personal_income","over_18years_old","median_age","males_per_100_females","white_rate","black_rate","personal_income","over_18years_old","median_age","males_per_100_females","white_rate","black_rate","personal_income","over_18years_old","median_age","males_per_100_females","white_rate","black_rate","personal_income","over_18years_old","median_age","males_per_100_females","white_rate","black_rate","personal_income","over_18years_old","median_age","males_per_100_females","white_rate","black_rate","personal_income"],"y":["over_18years_old","over_18years_old","over_18years_old","over_18years_old","over_18years_old","over_18years_old","median_age","median_age","median_age","median_age","median_age","median_age","males_per_100_females","males_per_100_females","males_per_100_females","males_per_100_females","males_per_100_females","males_per_100_females","white_rate","white_rate","white_rate","white_rate","white_rate","white_rate","black_rate","black_rate","black_rate","black_rate","black_rate","black_rate","personal_income","personal_income","personal_income","personal_income","personal_income","personal_income"],"z":[1,-0.065784495280183375,-0.14514150648949237,-0.38718160880112851,0.12506512894667143,0.1303535587765286,-0.065784495280183375,1,-0.27494607541108435,0.20385356272282457,-0.12150100855879276,-0.10510435695885476,-0.14514150648949237,-0.27494607541108435,1,0.31369520442134585,-0.74426871174489728,-0.028370761212803842,-0.38718160880112851,0.20385356272282457,0.31369520442134585,1,-0.49961338839841879,-0.20105271984739484,0.12506512894667143,-0.12150100855879276,-0.74426871174489728,-0.49961338839841879,1,-9.2857598099327642e-05,0.1303535587765286,-0.10510435695885476,-0.028370761212803842,-0.20105271984739484,-9.2857598099327642e-05,1],"zmin":-1,"zmax":1,"type":"heatmap","xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section id="黒人比率が高いと女性が多い" class="slide level2">
+<h2>黒人比率が高いと女性が多い？</h2>
+<ol type="1">
+<li>Differential Mortality Rates</li>
+</ol>
+<p>Black men in the United States experience higher mortality rates from many causes (e.g., heart disease, homicide)</p>
+<ol start="2" type="1">
+<li>Incarceration Rates</li>
+</ol>
+<p>Black men are incarcerated at disproportionately higher rates. When incarcerated, they are not counted among the “free” resident population</p>
+<ol start="3" type="1">
+<li>Migration and Labor Patterns</li>
+</ol>
+<p>In some regions, younger Black men may leave rural Southern states in search of work or opportunities elsewhere.</p>
+</section>
+<section id="パネルデータ化rコード" class="slide level2">
+<h2>パネルデータ化Rコード</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href=""></a>df_plm_total_log <span class="ot">&lt;-</span> df_dif_all <span class="sc">|&gt;</span> </span>
+<span id="cb10-2"><a href=""></a>  <span class="fu">filter</span>(name <span class="sc">==</span> <span class="st">"total_log"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb10-3"><a href=""></a>  <span class="fu">pdata.frame</span>(<span class="at">index =</span> <span class="fu">c</span>(<span class="st">"state"</span>, <span class="st">"name"</span>), <span class="at">drop.index =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb10-4"><a href=""></a>pooling_total_log <span class="ot">&lt;-</span> <span class="fu">plm</span>(value <span class="sc">~</span> median_age <span class="sc">+</span> males_per_100_females <span class="sc">+</span> white_rate <span class="sc">+</span></span>
+<span id="cb10-5"><a href=""></a>               personal_income <span class="sc">+</span> fy2012 <span class="sc">+</span> fy2016 <span class="sc">+</span> fy2020, <span class="at">data =</span> df_plm_total_log,</span>
+<span id="cb10-6"><a href=""></a>               <span class="at">model =</span> <span class="st">"pooling"</span>)</span>
+<span id="cb10-7"><a href=""></a>within_total_log <span class="ot">&lt;-</span> <span class="fu">plm</span>(value <span class="sc">~</span> median_age <span class="sc">+</span> males_per_100_females <span class="sc">+</span> white_rate <span class="sc">+</span></span>
+<span id="cb10-8"><a href=""></a>               personal_income <span class="sc">+</span> fy2012 <span class="sc">+</span> fy2016 <span class="sc">+</span> fy2020, <span class="at">data =</span> df_plm_total_log,</span>
+<span id="cb10-9"><a href=""></a>               <span class="at">model =</span> <span class="st">"within"</span>)</span>
+<span id="cb10-10"><a href=""></a>random_total_log <span class="ot">&lt;-</span> <span class="fu">plm</span>(value <span class="sc">~</span> median_age <span class="sc">+</span> males_per_100_females <span class="sc">+</span> white_rate <span class="sc">+</span></span>
+<span id="cb10-11"><a href=""></a>               personal_income <span class="sc">+</span> fy2012 <span class="sc">+</span> fy2016 <span class="sc">+</span> fy2020, <span class="at">data =</span> df_plm_total_log,</span>
+<span id="cb10-12"><a href=""></a>               <span class="at">model =</span> <span class="st">"random"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="pftest-phtest" class="slide level2">
+<h2>pFtest, phtest</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href=""></a><span class="fu">pFtest</span>(within_total_log, pooling_total_log)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    F test for individual effects
+
+data:  value ~ median_age + males_per_100_females + white_rate + personal_income +  ...
+F = 1814.9, df1 = 46, df2 = 150, p-value &lt; 2.2e-16
+alternative hypothesis: significant effects</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href=""></a><span class="fu">phtest</span>(within_total_log, random_total_log)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Hausman Test
+
+data:  value ~ median_age + males_per_100_females + white_rate + personal_income +  ...
+chisq = 1.1833e-12, df = 3, p-value = 1
+alternative hypothesis: one model is inconsistent</code></pre>
+</div>
+</div>
+</section>
+<section id="投票総数の自然対数を目的変数とした回帰分析random" class="slide level2">
+<h2>投票総数の自然対数を目的変数とした回帰分析(random)</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href=""></a><span class="fu">summary</span>(random_total_log)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Oneway (individual) effect Random Effect Model 
+   (Swamy-Arora's transformation)
+
+Call:
+plm(formula = value ~ median_age + males_per_100_females + white_rate + 
+    personal_income + fy2012 + fy2016 + fy2020, data = df_plm_total_log, 
+    model = "random")
+
+Balanced Panel: n = 51, T = 1, N = 204
+
+Effects:
+                   var  std.dev share
+idiosyncratic 0.002221 0.047127 0.001
+individual    4.028568 2.007129 0.999
+theta: 0.9765
+
+Residuals:
+      Min.    1st Qu.     Median    3rd Qu.       Max. 
+-0.1175892 -0.0331874 -0.0021373  0.0293177  0.1153831 
+
+Coefficients:
+                         Estimate  Std. Error  z-value  Pr(&gt;|z|)    
+(Intercept)            2.3877e+01  6.0062e+00   3.9754 7.026e-05 ***
+median_age            -1.9987e-02  7.0839e-02  -0.2821    0.7778    
+males_per_100_females -7.3769e-02  4.6562e-02  -1.5843    0.1131    
+white_rate            -1.3477e+00  1.0994e+00  -1.2259    0.2202    
+personal_income       -6.6892e-06  1.3464e-05  -0.4968    0.6193    
+fy2012                -1.6906e-01  9.3325e-03 -18.1148 &lt; 2.2e-16 ***
+fy2016                -1.2122e-01  9.3325e-03 -12.9886 &lt; 2.2e-16 ***
+fy2020                 1.4874e-02  9.3325e-03   1.5938    0.1110    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    1.701
+Residual Sum of Squares: 0.43531
+R-Squared:      0.74409
+Adj. R-Squared: 0.73495
+Chisq: 569.906 on 7 DF, p-value: &lt; 2.22e-16</code></pre>
+</div>
+</div>
+</section>
+<section id="cf.投票総数の自然対数を目的変数とした回帰分析within" class="slide level2">
+<h2>cf.投票総数の自然対数を目的変数とした回帰分析(within)</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href=""></a><span class="fu">summary</span>(within_total_log)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Oneway (individual) effect Within Model
+
+Call:
+plm(formula = value ~ median_age + males_per_100_females + white_rate + 
+    personal_income + fy2012 + fy2016 + fy2020, data = df_plm_total_log, 
+    model = "within")
+
+Balanced Panel: n = 51, T = 1, N = 204
+
+Residuals:
+     Min.   1st Qu.    Median   3rd Qu.      Max. 
+-0.124909 -0.025087  0.001148  0.022474  0.121523 
+
+Coefficients:
+         Estimate Std. Error  t-value Pr(&gt;|t|)    
+fy2012 -0.1690568  0.0093325 -18.1148   &lt;2e-16 ***
+fy2016 -0.1212162  0.0093325 -12.9886   &lt;2e-16 ***
+fy2020  0.0148744  0.0093325   1.5938   0.1131    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    1.5844
+Residual Sum of Squares: 0.33314
+R-Squared:      0.78973
+Adj. R-Squared: 0.71544
+F-statistic: 187.79 on 3 and 150 DF, p-value: &lt; 2.22e-16</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    F test for individual effects
+
+data:  value ~ median_age + males_per_100_females + white_rate + personal_income +  ...
+F = 46.738, df1 = 46, df2 = 150, p-value &lt; 2.2e-16
+alternative hypothesis: significant effects</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Hausman Test
+
+data:  value ~ median_age + males_per_100_females + white_rate + personal_income +  ...
+chisq = 1.5008e-13, df = 3, p-value = 1
+alternative hypothesis: one model is inconsistent</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    F test for individual effects
+
+data:  value ~ median_age + males_per_100_females + white_rate + personal_income +  ...
+F = 1063.2, df1 = 46, df2 = 150, p-value &lt; 2.2e-16
+alternative hypothesis: significant effects</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Hausman Test
+
+data:  value ~ median_age + males_per_100_females + white_rate + personal_income +  ...
+chisq = 9.3269e-13, df = 3, p-value = 1
+alternative hypothesis: one model is inconsistent</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    F test for individual effects
+
+data:  value ~ median_age + males_per_100_females + white_rate + personal_income +  ...
+F = 619.57, df1 = 46, df2 = 150, p-value &lt; 2.2e-16
+alternative hypothesis: significant effects</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Hausman Test
+
+data:  value ~ median_age + males_per_100_females + white_rate + personal_income +  ...
+chisq = 9.1367e-13, df = 3, p-value = 1
+alternative hypothesis: one model is inconsistent</code></pre>
+</div>
+</div>
+</section>
+<section id="共和党投票数の自然対数を目的変数とした回帰分析random" class="slide level2">
+<h2>共和党投票数の自然対数を目的変数とした回帰分析(random)</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href=""></a><span class="fu">summary</span>(random_rep_log)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Oneway (individual) effect Random Effect Model 
+   (Swamy-Arora's transformation)
+
+Call:
+plm(formula = value ~ median_age + males_per_100_females + white_rate + 
+    personal_income + fy2012 + fy2016 + fy2020, data = df_plm_rep_log, 
+    model = "random")
+
+Balanced Panel: n = 51, T = 1, N = 204
+
+Effects:
+                   var  std.dev share
+idiosyncratic 0.004683 0.068430 0.001
+individual    4.973651 2.230168 0.999
+theta: 0.9693
+
+Residuals:
+      Min.    1st Qu.     Median    3rd Qu.       Max. 
+-0.3737854 -0.0325664  0.0018789  0.0436344  0.1694984 
+
+Coefficients:
+                         Estimate  Std. Error  z-value  Pr(&gt;|z|)    
+(Intercept)            2.0870e+01  6.6749e+00   3.1266  0.001768 ** 
+median_age            -1.9605e-02  7.8726e-02  -0.2490  0.803338    
+males_per_100_females -3.9829e-02  5.1746e-02  -0.7697  0.441482    
+white_rate            -7.9934e-01  1.2218e+00  -0.6542  0.512956    
+personal_income       -2.7651e-05  1.4963e-05  -1.8480  0.064608 .  
+fy2012                -2.1704e-01  1.3551e-02 -16.0164 &lt; 2.2e-16 ***
+fy2016                -1.9285e-01  1.3551e-02 -14.2311 &lt; 2.2e-16 ***
+fy2020                -3.4503e-02  1.3551e-02  -2.5462  0.010892 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    2.781
+Residual Sum of Squares: 0.91779
+R-Squared:      0.66998
+Adj. R-Squared: 0.65819
+Chisq: 397.896 on 7 DF, p-value: &lt; 2.22e-16</code></pre>
+</div>
+</div>
+</section>
+<section id="民主党投票数の自然対数を目的変数とした回帰分析random" class="slide level2">
+<h2>民主党投票数の自然対数を目的変数とした回帰分析(random)</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href=""></a><span class="fu">summary</span>(random_dem_log)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Oneway (individual) effect Random Effect Model 
+   (Swamy-Arora's transformation)
+
+Call:
+plm(formula = value ~ median_age + males_per_100_females + white_rate + 
+    personal_income + fy2012 + fy2016 + fy2020, data = df_plm_dem_log, 
+    model = "random")
+
+Balanced Panel: n = 51, T = 1, N = 204
+
+Effects:
+                  var std.dev share
+idiosyncratic 0.00691 0.08313 0.002
+individual    4.27461 2.06751 0.998
+theta: 0.9598
+
+Residuals:
+     Min.   1st Qu.    Median   3rd Qu.      Max. 
+-0.392159 -0.048754 -0.002356  0.046553  0.297026 
+
+Coefficients:
+                         Estimate  Std. Error  z-value  Pr(&gt;|z|)    
+(Intercept)            2.2371e+01  6.1902e+00   3.6139 0.0003017 ***
+median_age             2.1687e-02  7.3009e-02   0.2970 0.7664338    
+males_per_100_females -8.6379e-02  4.7988e-02  -1.8000 0.0718591 .  
+white_rate            -2.0484e+00  1.1331e+00  -1.8079 0.0706224 .  
+personal_income        4.8128e-06  1.3876e-05   0.3468 0.7287132    
+fy2012                -1.1464e-01  1.6462e-02  -6.9637 3.315e-12 ***
+fy2016                -1.6667e-01  1.6462e-02 -10.1244 &lt; 2.2e-16 ***
+fy2020                 6.0095e-02  1.6462e-02   3.6505 0.0002617 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    3.0814
+Residual Sum of Squares: 1.3545
+R-Squared:      0.56045
+Adj. R-Squared: 0.54475
+Chisq: 249.908 on 7 DF, p-value: &lt; 2.22e-16</code></pre>
+</div>
+</div>
+</section>
+<section id="repdem1としたときのdem_rateを目的変数とした回帰分析random" class="slide level2">
+<h2>rep+dem=1としたときのdem_rateを目的変数とした回帰分析(random)</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href=""></a><span class="fu">summary</span>(random_rep_rate_100)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Oneway (individual) effect Random Effect Model 
+   (Swamy-Arora's transformation)
+
+Call:
+plm(formula = value ~ median_age + males_per_100_females + white_rate + 
+    personal_income + fy2012 + fy2016 + fy2020, data = df_plm_rep_rate_100, 
+    model = "random")
+
+Balanced Panel: n = 51, T = 1, N = 204
+
+Effects:
+                    var   std.dev share
+idiosyncratic 0.0004407 0.0209934 0.021
+individual    0.0201579 0.1419785 0.979
+theta: 0.8537
+
+Residuals:
+       Min.     1st Qu.      Median     3rd Qu.        Max. 
+-0.06194091 -0.01190151  0.00084642  0.01170388  0.10172619 
+
+Coefficients:
+                         Estimate  Std. Error z-value  Pr(&gt;|z|)    
+(Intercept)            6.9441e-01  4.2937e-01  1.6173  0.105821    
+median_age            -1.5609e-02  5.0640e-03 -3.0824  0.002053 ** 
+males_per_100_females  6.9461e-03  3.3285e-03  2.0868  0.036904 *  
+white_rate             3.0625e-01  7.8590e-02  3.8968 9.747e-05 ***
+personal_income       -6.5320e-06  9.6248e-07 -6.7866 1.148e-11 ***
+fy2012                -2.4943e-02  4.1573e-03 -5.9997 1.976e-09 ***
+fy2016                -4.7458e-03  4.1573e-03 -1.1415  0.253644    
+fy2020                -2.1887e-02  4.1573e-03 -5.2647 1.404e-07 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    0.15283
+Residual Sum of Squares: 0.086382
+R-Squared:      0.43479
+Adj. R-Squared: 0.4146
+Chisq: 150.771 on 7 DF, p-value: &lt; 2.22e-16</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = value ~ ., data = dem_log_2024_2020)
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.077671 -0.029774 -0.003808  0.026346  0.102497 
+
+Coefficients:
+                        Estimate Std. Error t value Pr(&gt;|t|)   
+(Intercept)            1.035e-01  2.648e-01   0.391  0.69775   
+median_age            -4.428e-03  3.123e-03  -1.418  0.16296   
+males_per_100_females -6.917e-04  2.053e-03  -0.337  0.73769   
+white_rate             1.575e-01  4.847e-02   3.250  0.00216 **
+personal_income       -4.071e-07  5.936e-07  -0.686  0.49630   
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.04426 on 46 degrees of freedom
+Multiple R-squared:  0.2304,    Adjusted R-squared:  0.1634 
+F-statistic: 3.442 on 4 and 46 DF,  p-value: 0.01527</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = value ~ ., data = rep_rate_100_2024_2020)
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.017610 -0.007653 -0.002066  0.005864  0.023538 
+
+Coefficients:
+                        Estimate Std. Error t value Pr(&gt;|t|)   
+(Intercept)           -2.096e-02  6.406e-02  -0.327  0.74497   
+median_age             1.971e-03  7.555e-04   2.609  0.01221 * 
+males_per_100_females -1.418e-04  4.966e-04  -0.286  0.77648   
+white_rate            -4.021e-02  1.173e-02  -3.429  0.00129 **
+personal_income        9.357e-08  1.436e-07   0.652  0.51788   
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.01071 on 46 degrees of freedom
+Multiple R-squared:  0.315, Adjusted R-squared:  0.2554 
+F-statistic: 5.289 on 4 and 46 DF,  p-value: 0.001371</code></pre>
+</div>
+</div>
+</section></section>
+<section>
+<section id="おまけ20202024年に起こった変化をolsで解析" class="title-slide slide level1 center">
+<h1>おまけ）2020→2024年に起こった変化をOLSで解析</h1>
+
+</section>
+<section id="共和党投票数の自然対数の差を目的変数とした回帰分析ols" class="slide level2">
+<h2>共和党投票数の自然対数の差を目的変数とした回帰分析(OLS)</h2>
+<p><span class="math inline">\(ln(fy2024) - ln(fy2020) = ln(fy2024 / fy2020)\)</span></p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = value ~ ., data = rep_log_2024_2020)
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.075553 -0.027544  0.006133  0.027271  0.093857 
+
+Coefficients:
+                        Estimate Std. Error t value Pr(&gt;|t|)  
+(Intercept)            3.788e-01  2.234e-01   1.695   0.0968 .
+median_age            -5.634e-05  2.635e-03  -0.021   0.9830  
+males_per_100_females -4.129e-03  1.732e-03  -2.384   0.0213 *
+white_rate             2.437e-03  4.089e-02   0.060   0.9527  
+personal_income        9.241e-07  5.008e-07   1.845   0.0715 .
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.03734 on 46 degrees of freedom
+Multiple R-squared:  0.1921,    Adjusted R-squared:  0.1219 
+F-statistic: 2.735 on 4 and 46 DF,  p-value: 0.04006</code></pre>
+</div>
+</div>
+</section>
+<section id="民主党投票数の自然対数の差を目的変数とした回帰分析ols" class="slide level2">
+<h2>民主党投票数の自然対数の差を目的変数とした回帰分析(OLS)</h2>
+<p><span class="math inline">\(ln(fy2024) - ln(fy2020) = ln(fy2024 / fy2020)\)</span></p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = value ~ ., data = dem_log_2024_2020)
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.077671 -0.029774 -0.003808  0.026346  0.102497 
+
+Coefficients:
+                        Estimate Std. Error t value Pr(&gt;|t|)   
+(Intercept)            1.035e-01  2.648e-01   0.391  0.69775   
+median_age            -4.428e-03  3.123e-03  -1.418  0.16296   
+males_per_100_females -6.917e-04  2.053e-03  -0.337  0.73769   
+white_rate             1.575e-01  4.847e-02   3.250  0.00216 **
+personal_income       -4.071e-07  5.936e-07  -0.686  0.49630   
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.04426 on 46 degrees of freedom
+Multiple R-squared:  0.2304,    Adjusted R-squared:  0.1634 
+F-statistic: 3.442 on 4 and 46 DF,  p-value: 0.01527</code></pre>
+</div>
+</div>
+</section>
+<section id="repdem1としたときのrep_rateの差を目的変数とした回帰分析ols" class="slide level2">
+<h2>rep+dem=1としたときのrep_rateの差を目的変数とした回帰分析(OLS)</h2>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = value ~ ., data = rep_rate_100_2024_2020)
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.017610 -0.007653 -0.002066  0.005864  0.023538 
+
+Coefficients:
+                        Estimate Std. Error t value Pr(&gt;|t|)   
+(Intercept)           -2.096e-02  6.406e-02  -0.327  0.74497   
+median_age             1.971e-03  7.555e-04   2.609  0.01221 * 
+males_per_100_females -1.418e-04  4.966e-04  -0.286  0.77648   
+white_rate            -4.021e-02  1.173e-02  -3.429  0.00129 **
+personal_income        9.357e-08  1.436e-07   0.652  0.51788   
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.01071 on 46 degrees of freedom
+Multiple R-squared:  0.315, Adjusted R-squared:  0.2554 
+F-statistic: 5.289 on 4 and 46 DF,  p-value: 0.001371</code></pre>
+</div>
+</div>
+</section>
+<section id="まとめ" class="slide level2">
+<h2>まとめ</h2>
+<ul>
+<li>時系列データをパネルデータにすると、有意差が出やすくておもしろいよ。</li>
+<li>報道やSNSの論評を信頼しすぎず、データが公開されているものは、解析してみるとおもしろいよ。</li>
+</ul>
+</section></section>
+<section id="enjoy" class="title-slide slide level1 center">
+<h1>Enjoy！</h1>
+
+</section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="index_files/libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="index_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="index_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="index_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="index_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="index_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="index_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="index_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="index_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="index_files/libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: false,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    
+
+    <script>
+
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+
+      // slide changes (different for each slide format).
+
+      (function () {
+
+        // dispatch for htmlwidgets
+
+        function fireSlideEnter() {
+
+          const event = window.document.createEvent("Event");
+
+          event.initEvent("slideenter", true, true);
+
+          window.document.dispatchEvent(event);
+
+        }
+
+    
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+
+          fireSlideEnter();
+
+    
+
+          // dispatch for shiny
+
+          if (window.jQuery) {
+
+            if (previousSlide) {
+
+              window.jQuery(previousSlide).trigger("hidden");
+
+            }
+
+            if (currentSlide) {
+
+              window.jQuery(currentSlide).trigger("shown");
+
+            }
+
+          }
+
+        }
+
+    
+
+        // hookup for slidy
+
+        if (window.w3c_slidy) {
+
+          window.w3c_slidy.add_observer(function (slide_num) {
+
+            // slide_num starts at position 1
+
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+
+          });
+
+        }
+
+    
+
+      })();
+
+    </script>
+
+    
+
+    <script id="quarto-html-after-body" type="application/javascript">
+    window.document.addEventListener("DOMContentLoaded", function (event) {
+      const toggleBodyColorMode = (bsSheetEl) => {
+        const mode = bsSheetEl.getAttribute("data-mode");
+        const bodyEl = window.document.querySelector("body");
+        if (mode === "dark") {
+          bodyEl.classList.add("quarto-dark");
+          bodyEl.classList.remove("quarto-light");
+        } else {
+          bodyEl.classList.add("quarto-light");
+          bodyEl.classList.remove("quarto-dark");
+        }
+      }
+      const toggleBodyColorPrimary = () => {
+        const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+        if (bsSheetEl) {
+          toggleBodyColorMode(bsSheetEl);
+        }
+      }
+      toggleBodyColorPrimary();  
+      const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+      tabsets.forEach(function(tabset) {
+        const tabby = new Tabby('#' + tabset.id);
+      });
+      const isCodeAnnotation = (el) => {
+        for (const clz of el.classList) {
+          if (clz.startsWith('code-annotation-')) {                     
+            return true;
+          }
+        }
+        return false;
+      }
+      const onCopySuccess = function(e) {
+        // button target
+        const button = e.trigger;
+        // don't keep focus
+        button.blur();
+        // flash "checked"
+        button.classList.add('code-copy-button-checked');
+        var currentTitle = button.getAttribute("title");
+        button.setAttribute("title", "Copied!");
+        let tooltip;
+        if (window.bootstrap) {
+          button.setAttribute("data-bs-toggle", "tooltip");
+          button.setAttribute("data-bs-placement", "left");
+          button.setAttribute("data-bs-title", "Copied!");
+          tooltip = new bootstrap.Tooltip(button, 
+            { trigger: "manual", 
+              customClass: "code-copy-button-tooltip",
+              offset: [0, -8]});
+          tooltip.show();    
+        }
+        setTimeout(function() {
+          if (tooltip) {
+            tooltip.hide();
+            button.removeAttribute("data-bs-title");
+            button.removeAttribute("data-bs-toggle");
+            button.removeAttribute("data-bs-placement");
+          }
+          button.setAttribute("title", currentTitle);
+          button.classList.remove('code-copy-button-checked');
+        }, 1000);
+        // clear code selection
+        e.clearSelection();
+      }
+      const getTextToCopy = function(trigger) {
+          const codeEl = trigger.previousElementSibling.cloneNode(true);
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+      }
+      const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+        text: getTextToCopy
+      });
+      clipboard.on('success', onCopySuccess);
+      if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+        const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+          text: getTextToCopy,
+          container: window.document.getElementById('quarto-embedded-source-code-modal')
+        });
+        clipboardModal.on('success', onCopySuccess);
+      }
+        var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+        var mailtoRegex = new RegExp(/^mailto:/);
+          var filterRegex = new RegExp('/' + window.location.host + '/');
+        var isInternal = (href) => {
+            return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+        }
+        // Inspect non-navigation links and adorn them if external
+     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+        for (var i=0; i<links.length; i++) {
+          const link = links[i];
+          if (!isInternal(link.href)) {
+            // undo the damage that might have been done by quarto-nav.js in the case of
+            // links that we want to consider external
+            if (link.dataset.originalHref !== undefined) {
+              link.href = link.dataset.originalHref;
+            }
+          }
+        }
+      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+        const config = {
+          allowHTML: true,
+          maxWidth: 500,
+          delay: 100,
+          arrow: false,
+          appendTo: function(el) {
+              return el.closest('section.slide') || el.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'light-border',
+          placement: 'bottom-start',
+        };
+        if (contentFn) {
+          config.content = contentFn;
+        }
+        if (onTriggerFn) {
+          config.onTrigger = onTriggerFn;
+        }
+        if (onUntriggerFn) {
+          config.onUntrigger = onUntriggerFn;
+        }
+          config['offset'] = [0,0];
+          config['maxWidth'] = 700;
+        window.tippy(el, config); 
+      }
+      const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+      for (var i=0; i<noterefs.length; i++) {
+        const ref = noterefs[i];
+        tippyHover(ref, function() {
+          // use id or data attribute instead here
+          let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+          try { href = new URL(href).hash; } catch {}
+          const id = href.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note) {
+            return note.innerHTML;
+          } else {
+            return "";
+          }
+        });
+      }
+      const findCites = (el) => {
+        const parentEl = el.parentElement;
+        if (parentEl) {
+          const cites = parentEl.dataset.cites;
+          if (cites) {
+            return {
+              el,
+              cites: cites.split(' ')
+            };
+          } else {
+            return findCites(el.parentElement)
+          }
+        } else {
+          return undefined;
+        }
+      };
+      var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+      for (var i=0; i<bibliorefs.length; i++) {
+        const ref = bibliorefs[i];
+        const citeInfo = findCites(ref);
+        if (citeInfo) {
+          tippyHover(citeInfo.el, function() {
+            var popup = window.document.createElement('div');
+            citeInfo.cites.forEach(function(cite) {
+              var citeDiv = window.document.createElement('div');
+              citeDiv.classList.add('hanging-indent');
+              citeDiv.classList.add('csl-entry');
+              var biblioDiv = window.document.getElementById('ref-' + cite);
+              if (biblioDiv) {
+                citeDiv.innerHTML = biblioDiv.innerHTML;
+              }
+              popup.appendChild(citeDiv);
+            });
+            return popup.innerHTML;
+          });
+        }
+      }
+    });
+    </script>
+    
+
+</body></html>

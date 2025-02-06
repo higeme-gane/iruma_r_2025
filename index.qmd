@@ -1,0 +1,731 @@
+---
+title: "パネルデータでアメリカ大統領選を解析する"
+subtitle: "@higeme"
+format: revealjs
+---
+
+```{r}
+#| echo: false
+
+library(conflicted)
+library(tidyverse)
+library(knitr)
+library(broom)
+library(kableExtra)
+library(maps)
+library(sf)
+library(ggrepel)
+library(plotly)
+library(reshape2)
+library(stargazer)
+library(psych)
+library(openxlsx)
+library(psych)
+conflicts_prefer(dplyr::filter)
+conflicts_prefer(plotly::layout)
+conflicts_prefer(purrr::map)
+
+df <- read_csv("n_votes_usa_president_2012_2024.csv")
+df_add <- df |> 
+  pivot_wider() |> 
+  mutate(rep_log = log(rep_votes)) |> 
+  mutate(dem_log = log(dem_votes)) |> 
+  mutate(total_log = log(total_votes)) |> 
+  mutate(rep_rate = rep_votes / total_votes) |> 
+  mutate(dem_rate = dem_votes / total_votes) |> 
+  mutate(other_rate = 1 - rep_rate - dem_rate) |> 
+  mutate(rep_rate_100 = rep_votes / (rep_votes + dem_votes)) |>
+  mutate(dem_rate_100 = 1 - rep_rate_100) |> 
+  pivot_longer(cols = c(-1, -2)) |> 
+  arrange(year) |> 
+  arrange(state)
+
+piv <- summarise(.data = df, n = sum(value), .by = c(name, year)) |>
+  pivot_wider(names_from = name, values_from = n) |>
+  arrange(year)
+
+piv_rate <- piv |> 
+  mutate(rep_rate = rep_votes / total_votes) |> 
+  mutate(dem_rate = dem_votes / total_votes) |> 
+  mutate(other_rate = 1 - rep_rate - dem_rate) |> 
+  select(year, rep_rate, dem_rate, other_rate) |> 
+  mutate(across(c(rep_rate, dem_rate, other_rate), ~ round(.x, digits = 3)))
+
+piv_rate_100 <- piv |> 
+  mutate(rep_rate = rep_votes / (rep_votes + dem_votes)) |> 
+  mutate(dem_rate = dem_votes / (rep_votes + dem_votes)) |> 
+  select(year, rep_rate, dem_rate) |> 
+  mutate(across(c(rep_rate, dem_rate), ~ round(.x, digits = 3)))
+
+df_dif_rate <- df |> 
+  pivot_wider() |> 
+  mutate(dif = round(((rep_votes - dem_votes) / total_votes) * 100, digits = 1))
+```
+
+## 自己紹介
+- 早稲田大学第一文学部演劇専修卒業（当時所沢市山口在住）
+
+- 佐久長聖中学・高等学校（国語科教諭）
+
+- 病院に転職。その後医療関係の職を転々とする。
+
+- 医療法人丸山会　丸子中央病院　経営企画課
+
+- 国立大学法人信州大学大学院経済学分野修了
+
+- 信州木曽看護専門学校非常勤講師（看護研究　統計学）
+
+- （資格）統計検定２級取得、準1級勉強中。JDLA Deep Learning for GENERAL 2023 #1
+
+## Arizona
+
+![Arizona](arizona.png)
+
+## Stadium Locations in the United States
+```{r}
+stadiums <- read_csv("stadiums.csv")
+
+# MLB, NFL, NBAのデータのみ抽出
+selected_leagues <- c("MLB", "NFL", "NBA")
+sports_data <- stadiums %>%
+  filter(League %in% selected_leagues) %>%
+  rename(lon = Long, lat = Lat, league = League, team = Team) %>%
+  select(team, league, lon, lat)
+
+# sfオブジェクトに変換
+sports_sf <- st_as_sf(sports_data, coords = c("lon", "lat"), crs = 4326)
+
+# アメリカ地図データ
+usa <- st_as_sf(maps::map("state", plot = FALSE, fill = TRUE))
+
+# 全体地図の作成
+full_map <- ggplot() +
+  geom_sf(data = usa, fill = "lightgray", color = "white") +
+  geom_sf(data = sports_sf, aes(color = league), size = 2.5, shape = 16) +
+  geom_label_repel(data = sports_data, aes(x = lon, y = lat, label = team, color = league),
+                   size = 2.5, box.padding = 0.5, max.overlaps = 10, force = 5) +
+  scale_color_manual(values = c("MLB" = "red", "NFL" = "blue", "NBA" = "green")) +
+  labs(
+    title = "MLB, NFL, and NBA Stadium Locations in the United States",
+    subtitle = "Locations of Major Sports League Stadiums with Team Names",
+    color = "League",
+    caption = "Data Source: Kaggle - Sports Stadium Locations"
+  ) +
+  theme_minimal() +
+  theme(axis.text = element_blank(), axis.ticks = element_blank(), panel.grid = element_blank())
+
+full_map
+```
+
+## R言語Advent Calendar 2024　21日目
+
+[https://qiita.com/hige_megane/items/062fcf108b1cd8ba056d](https://qiita.com/hige_megane/items/062fcf108b1cd8ba056d)
+
+
+「多くの人が共和党圧勝だったというが、本当は僅差だった」は本当にそうか自分で視覚化したくなりました。そこで、年末年始、しこしことRでプログラム組んでみました。私のような初心者が地図に選挙の勝敗具合を色分けするなんて、生成AIのない時代なら考えられないことで、chatGPTが出てわずか2年余りなのに隔世の感がありますね。
+
+## USAの地図に得票率を塗り分けるRコード
+
+```{r}
+#| echo: true
+
+# アメリカの州境界データを取得
+states_map <- st_as_sf(maps::map("state", plot = FALSE, fill = TRUE)) |> 
+  mutate(state = ID)
+valid_states <- states_map$state
+
+#alaskaとhawaiiの2州が除外されているか確認
+df_deleted <- filter(.data = df_dif_rate, !state %in% valid_states)
+#2州を削除したデータフレーム
+df_49 <- filter(.data = df_dif_rate, state %in% valid_states)
+#49州の緯度経度境界データをleft_join()で追加
+df_n_percent <- left_join(states_map, df_49, by = "state")
+
+#塗分け比率を固定
+dif_range <- range(df_n_percent$dif)
+
+df_2012 <- filter(.data = df_n_percent, year == 2012)
+us_map_plot_2012 <- ggplot(data = df_2012) +
+  geom_sf(aes(fill = dif), color = "black", size = 0.2) +  # difで塗り分け
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white", midpoint = 0, 
+                       name = "share values",
+                       limits = dif_range) +             # カラースケール
+  geom_sf_text(aes(label = ID), 
+               size = 2, color = "black") +
+  theme_minimal() +                                     # テーマを調整
+  theme(legend.position = "bottom")
+
+df_2016 <- filter(.data = df_n_percent, year == 2016)
+us_map_plot_2016 <- ggplot(data = df_2016) +
+  geom_sf(aes(fill = dif), color = "black", size = 0.2) +  # difで塗り分け
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white", midpoint = 0, 
+                       name = "share values",
+                       limits = dif_range) +             # カラースケール
+  geom_sf_text(aes(label = ID), 
+               size = 2, color = "black") +
+  theme_minimal() +                                     # テーマを調整
+  theme(legend.position = "bottom")
+
+df_2020 <- filter(.data = df_n_percent, year == 2020)
+us_map_plot_2020 <- ggplot(data = df_2020) +
+  geom_sf(aes(fill = dif), color = "black", size = 0.2) +  # difで塗り分け
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white", midpoint = 0, 
+                       name = "share values",
+                       limits = dif_range) +             # カラースケール
+  geom_sf_text(aes(label = ID), 
+               size = 2, color = "black") +
+  theme_minimal() +                                     # テーマを調整
+  theme(legend.position = "bottom")
+
+df_2024 <- filter(.data = df_n_percent, year == 2024)
+us_map_plot_2024 <- ggplot(data = df_2024) +
+  geom_sf(aes(fill = dif), color = "black", size = 0.2) +  # difで塗り分け
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white", midpoint = 0, 
+                       name = "share values",
+                       limits = dif_range) +             # カラースケール
+  geom_sf_text(aes(label = ID), 
+               size = 2, color = "black") +
+  theme_minimal() +                                     # テーマを調整
+  theme(legend.position = "bottom")
+```
+
+## 2012年の選挙結果
+```{r}
+plot(us_map_plot_2012)
+```
+
+## 2016年の選挙結果
+```{r}
+plot(us_map_plot_2016)
+```
+
+## 2020年の選挙結果
+```{r}
+plot(us_map_plot_2020)
+```
+
+## 2024年の選挙結果
+```{r}
+plot(us_map_plot_2024)
+```
+
+## 私はなぜRを使うのか
+
+Rに愛着があるからです！が…
+
+## 何かRに対する唯ぼんやりとした不安
+
+- 生成AIに尋ねると日本地図を塗り分けるためのlibraryは用意されているが、cranに登録されていない？.shpファイルを用意する必要があるが、適切なファイルを見つけることが案外難しい。
+- utf-8（のみ）が得意なRを日本で使うメリットは？
+
+# Rを使う意義は「データ解析」にあり！
+
+## アメリカ大統領選挙の投票結果データ
+
+2012年、2016年、2020年、2024年の大統領選4回分のデータを[Wikipedia](https://en.wikipedia.org/wiki/2024_United_States_presidential_election)より取得。
+
+2024年選挙は下記が最終結果と思われる。
+
+"2024 Presidential Election Results". Associated Press. January 2, 2025. Retrieved January 2, 2025.
+
+## データの概要
+
+51州(District of Columbia含む) X
+
+共和党得票数、民主党得票数、総得票数 X
+
+2012～2024年のアメリカ大統領選4回。
+
+```{r}
+#| echo: false
+# データフレームの行数と列数を取得
+n_rows <- nrow(df)
+n_cols <- ncol(df)
+head_rows <- 6
+
+# キャプションにデータフレームのサイズ情報を含める
+caption_text <- sprintf("全%d行 x %d列", n_rows, n_cols)
+
+df |> 
+  head(head_rows) |> 
+  kable("html", caption = caption_text) |> 
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) |> 
+  row_spec(0, background = "#CCCCCC", color = "black", bold = TRUE) |> 
+  column_spec(1, bold = TRUE)
+```
+
+## **アメリカ全州の投票結果**
+
+```{r}
+#| echo: false
+kable(piv, format = "html" #, caption="ピボットテーブルの結果"
+      ) %>%
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+```
+
+## 全投票数に占める得票率
+
+```{r}
+#| echo: false
+kable(piv_rate, format = "html" #, caption="ピボットテーブルの結果"
+      ) %>%
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+```
+
+## 主要2党の投票合計を1としたときの得票率
+
+```{r}
+#| echo: false
+kable(piv_rate_100, format = "html" #, caption="ピボットテーブルの結果"
+      ) %>%
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+```
+
+# 時系列データはパネルデータにすることを考えよう！
+
+## パネルデータのメリット
+
+- 単純な時系列データ（1つの対象を時系列で見る）や横断データ（複数対象をある時点で見る）と比較して、パネルデータは「横断面 × 時系列」の両方の情報を含むため、サンプルサイズが増え、推定精度向上が期待できる。
+
+- 各個体固有の（しかし観測できない）特性をモデルで扱いやすくなる。
+
+## パネルデータモデルの推定方法
+
+1. pooling
+
+2. within
+
+3. random
+
+
+## パネルデータモデルの推定方法1
+
+1. pooling（単純な回帰分析）
+
+- 縦断面（個体）の違いも時間的な違いも全く考慮せず、単純に「全てのデータを一括に」まとめて（プールして）回帰を行う方法。
+
+- パネルデータをただの「大きな横断データ」あるいは「大きな時系列データ」のように扱う。
+
+## パネルデータモデルの推定方法2
+
+2. within（固定効果モデル、FEM）
+
+- 各個体（今回は州）が持つ「観測されないが時間を通じて不変な特性」を固定効果とみなし、それをコントロールする。
+
+- 個体ごとに異なる「不変の特性」を取り除くため、観測されない要因によるバイアスを大きく減らせる。
+
+- 説明変数と個体効果が相関していても大丈夫だが、時間不変の変数が推定できない。
+
+## パネルデータモデルの推定方法3
+
+3. random(変量効果モデル、REM)
+
+- 個体ごとの特性（個体効果）を「確率的（ランダム）なもの」とみなし、誤差項の一部として扱う。
+
+- 説明変数との無相関を仮定するため、その仮定が満たされれば効率的、満たされなければバイアスが生じる。
+
+→Hausman検定
+
+## 固定効果モデルと変量効果モデルの数式
+
+個体（今回の場合は州）のindex$: i = 1, 2, \dots , N$
+
+時点のindex$:t = 1, 2, \dots , T$
+
+被説明変数$:y_{it}$
+ 
+説明変数ベクトル$:x_{it}$（$𝑘$次元）
+
+誤差項：$u_{it}$
+
+## 固定効果モデル（Fixed Effects Model）
+
+個体ごとの効果$\alpha_i$を観測不可能だが固定パラメータとして推定する。
+
+$y_{it} = \alpha_i + x_{it} \beta + u_{it}$
+
+各個体$i$について時間平均を引くことで$\alpha_i$を消去する。
+
+$y_{it} - \bar{y_i} = (\alpha_i - \alpha_i) + (x_{it}- \bar{x_i}) \beta + (u_{it} - \bar{u_i})$
+
+個体不変の要因を除去の上通常のOLSを適用すれば$\beta$の推定が可能。
+
+##  変量効果モデル(Random Effects Model)
+
+個体ごとの効果をランダムな確率変数$\mu_i$で扱う。
+
+$y_{it} = \alpha + x_{it} \beta + \mu_i + u_{it} \quad | \quad Cov(\mu_i, x_{it}) = 0$
+
+合成誤差項 $\epsilon_{it} = \mu_i + u_{it}$ で誤差項を考えるが、$\mu_i$と$u_{it}$は時点間で相関が生じるため、OLSではなくGLS（一般化最小二乗法）を用いて誤差構造を考慮しつつ$\beta$を推定する。
+
+$\mu_i$がランダムのため、$\beta$と分散パラメータ$\sigma_\mu^2, \sigma_u^2$などを推定するだけですむ。
+
+
+## パネルデータの作り方
+```{r}
+#| echo: true
+df_dif_rate_2 <- df_add |> 
+  mutate(fy2012 = if_else(year == 2012, 1, 0)) |> 
+  mutate(fy2016 = if_else(year == 2016, 1, 0)) |> 
+  mutate(fy2020 = if_else(year == 2020, 1, 0))
+df_rep_100 <- df_dif_rate_2 |> 
+  filter(name == "rep_rate_100")
+library(plm)
+plm_rep_100 <- pdata.frame(df_rep_100, index = c("state", "year"))
+head(plm_rep_100, n = 12)
+```
+
+## 回帰分析式
+
+$n = \beta_0 + \beta_1 * fy12 + \beta_2 * fy16 + \beta_3 * fy20$
+
+各年の値
+
+$n_{(fy12)} = \beta_0 + \beta_1 * fy12$
+
+$n_{(fy16)} = \beta_0 + \beta_2 * fy16$
+
+$n_{(fy20)} = \beta_0 + \beta_3 * fy20$
+
+$n_{(fy24)} = \beta_0$
+
+## コードと結果(目的変数:rep+dem=1としたときのrep_rate)
+```{r}
+#| echo: true
+pooling_2024 <- plm(value ~ fy2012 + fy2016 + fy2020,
+                    data = plm_rep_100, model = "pooling")
+within_2024 <- plm(value ~ fy2012 + fy2016 + fy2020,
+                   data = plm_rep_100, model = "within")
+random_2024 <- plm(value ~ fy2012 + fy2016 + fy2020,
+                   data = plm_rep_100, model = "random")
+stargazer(pooling_2024, within_2024, random_2024, type = "text")
+```
+
+## F test
+
+個体効果の有無を検定。
+
+$H_0:$ 個体効果が存在しない。→pooling
+
+$H_1:$ 個体効果が存在する。→within
+
+```{r}
+#| echo: true
+pFtest(within_2024, pooling_2024) 
+```
+
+## Hausman test
+
+個体効果と説明変数に相関があるかの検定。
+
+$H_0:$ ランダム効果モデルは不偏かつ効率的。→random
+
+$H_1:$ 個体効果と説明変数に相関がある。→within
+
+```{r}
+#| echo: true
+phtest(within_2024, random_2024)
+```
+
+## 多変量解析のだいご味はいろいろな指標をいれることにあり
+
+"Census"[https://data.census.gov/](https://data.census.gov/)にアメリカ合衆国の各州の情報が掲載されている。
+
+- 人口（18歳以上人口）
+- 男女比
+- 年齢中央値
+- 白人比率
+- 黒人比率
+- 個人所得
+
+```{r}
+# 相関係数のヒートマップ
+#USA state database
+#https://apps.bea.gov/itable/?ReqID=99&step=1&_gl=1*17sn41j*_ga*MjAxMjU2MzA3Ny4xNzE3NjcyODY5*_ga_J4698JNNFT*MTcxNzY3Mjg3OS4xLjEuMTcxNzY3Mjg5OS40MC4wLjA.#eyJhcHBpZCI6OTksInN0ZXBzIjpbMSwyOSwyNSwyNl0sImRhdGEiOltbIlRhYmxlSWQiLCI2MDAiXSxbIk1ham9yQXJlYUtleSIsIjAiXV19
+#SASUMMARY State annual summary statistics: personal income, GDP, consumer spending, price indexes, and employment
+#Real personal income (Millions of constant 2017 dollars)
+df_income <- read_csv("personal_income.csv", skip = 3) |> 
+  rename(name = GeoName,
+         personal_income_2023 = "2023") |> 
+  filter(!is.na(name)) |> 
+  mutate(personal_income_2023 = as.integer(personal_income_2023)) |> 
+  filter(GeoFips != "00000") |> 
+  select(-GeoFips)
+
+#https://data.census.gov/table/ACSST1Y2023.S0101?q=sex&g=010XX00US$0400000&moe=false
+target_label <- dplyr::tibble(
+  label = c("Total population", "18 years and over", "Median age (years)", "Sex ratio (males per 100 females)"),
+  new_label = c("total_population", "over_18years_old", "median_age", "males_per_100_females"))
+df_pop_sex <- read_csv("ACSST1Y2023.S0101-2025-01-12T021909.csv") |> 
+  rename(label = 1) |> 
+  mutate(label = str_squish(label)) |> 
+  pivot_longer(cols = -1) |> 
+  filter(str_detect(name, "Total!!Estimate")) |> 
+  mutate(value = as.numeric(str_replace_all(value, ",", ""))) |> 
+  filter(!is.na(value)) |> 
+  mutate(name = str_sub(name, 1, -18)) |>
+  filter(name != "Puerto Rico") |> 
+  filter(label %in% target_label$label) |> 
+  left_join(target_label, by = "label") |> 
+  select(-label) |> 
+  rename(label = new_label) |> 
+  pivot_wider(names_from = label, values_from = value)
+
+#https://data.census.gov/table/DECENNIALCD1182020.P8?q=white&g=010XX00US$0400000
+df_race <- read_csv("DECENNIALCD1182020.P8-2025-01-12T074840.csv") |> 
+  slice(1, 3, 4) |> 
+  rename(label = 1) |> 
+  mutate(label = str_squish(label)) |> 
+  pivot_longer(cols = -1) |> 
+  mutate(label = str_sub(label, 1, 5)) |> 
+  pivot_wider(names_from = label, values_from = value) |>
+  filter(name != "Puerto Rico") |> 
+  mutate(white_rate = White / Total,
+         black_rate = Black / Total) |> 
+  select(name, white_rate, black_rate)
+
+df_database <- left_join(df_pop_sex, df_race, by = "name") |> 
+  left_join(df_income, by = "name") |> 
+  mutate(personal_income = personal_income_2023 * 1000000 / total_population) |> 
+  select(-personal_income_2023, -total_population) |> 
+  mutate(name = str_to_lower(name)) |> 
+  rename(state = name)
+
+numeric_data <- select(.data = df_database, -state)
+cor_matrix <- cor(numeric_data)
+
+melted_cor <- melt(cor_matrix)
+
+# Create an interactive heatmap
+p <- plot_ly(
+  x = melted_cor$Var1,
+  y = melted_cor$Var2,
+  z = melted_cor$value,
+  type = "heatmap",
+  colorscale = "RdBu",  # Red-Blue diverging colorscale
+  zmin = -1,            # Set minimum correlation value
+  zmax = 1             # Set maximum correlation value
+) %>%
+  layout(
+    title = "Correlation Matrix Heatmap",
+    xaxis = list(title = ""),
+    yaxis = list(title = ""),
+    annotations = list(
+      x = melted_cor$Var1,
+      y = melted_cor$Var2,
+      text = round(melted_cor$value, 2),  # Show correlation values rounded to 2 decimals
+      showarrow = FALSE,
+      font = list(color = 'white')
+    )
+  )
+df_database_long <- df_database |> 
+  mutate(across(c(white_rate, black_rate), ~ . * 100)) |> 
+  pivot_longer(cols = -1) |> 
+  summarise(ave = mean(value),
+            sd = sd(value),
+            med = median(value),
+            max = max(value),
+            min = min(value),
+             .by = "name") |> 
+  mutate(across(c(ave:min), ~ round(.)))
+```
+
+## 記述統計
+
+```{r}
+#| echo: false
+kable(df_database_long, format = "html" #, caption="ピボットテーブルの結果"
+      ) %>%
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+```
+
+## Heat Map
+```{r}
+# | echo: true
+p
+```
+
+## 黒人比率が高いと女性が多い？
+1. Differential Mortality Rates
+
+Black men in the United States experience higher mortality rates from many causes (e.g., heart disease, homicide)
+
+2. Incarceration Rates
+
+Black men are incarcerated at disproportionately higher rates. When incarcerated, they are not counted among the “free” resident population
+
+3. Migration and Labor Patterns
+
+In some regions, younger Black men may leave rural Southern states in search of work or opportunities elsewhere.
+
+```{r}
+#| echo: false
+df_dif_all <- df_dif_rate_2 |> 
+  left_join(df_database, by = "state")
+target_variable <- distinct(.data = df_dif_all, name, .keep_all = FALSE)$name
+```
+
+## パネルデータ化Rコード
+```{r}
+#| echo: true
+df_plm_total_log <- df_dif_all |> 
+  filter(name == "total_log") |> 
+  pdata.frame(index = c("state", "name"), drop.index = FALSE)
+pooling_total_log <- plm(value ~ median_age + males_per_100_females + white_rate +
+               personal_income + fy2012 + fy2016 + fy2020, data = df_plm_total_log,
+               model = "pooling")
+within_total_log <- plm(value ~ median_age + males_per_100_females + white_rate +
+               personal_income + fy2012 + fy2016 + fy2020, data = df_plm_total_log,
+               model = "within")
+random_total_log <- plm(value ~ median_age + males_per_100_females + white_rate +
+               personal_income + fy2012 + fy2016 + fy2020, data = df_plm_total_log,
+               model = "random")
+```
+
+## pFtest, phtest
+
+```{r}
+#| echo: true
+pFtest(within_total_log, pooling_total_log)
+phtest(within_total_log, random_total_log)
+```
+
+## 投票総数の自然対数を目的変数とした回帰分析(random)
+```{r}
+#| echo: true
+summary(random_total_log)
+```
+
+## cf.投票総数の自然対数を目的変数とした回帰分析(within)
+```{r}
+#| echo: true
+summary(within_total_log)
+```
+
+```{r}
+#| echo: false
+df_plm_rep_rate_100 <- df_dif_all |> 
+  filter(name == "rep_rate_100") |> 
+  pdata.frame(index = c("state", "name"), drop.index = FALSE)
+pooling_rep_rate_100 <- plm(value ~ median_age + males_per_100_females + white_rate +
+               personal_income + fy2012 + fy2016 + fy2020, data = df_plm_rep_rate_100,
+               model = "pooling")
+within_rep_rate_100 <- plm(value ~ median_age + males_per_100_females + white_rate +
+               personal_income + fy2012 + fy2016 + fy2020, data = df_plm_rep_rate_100,
+               model = "within")
+random_rep_rate_100 <- plm(value ~ median_age + males_per_100_females + white_rate +
+               personal_income + fy2012 + fy2016 + fy2020, data = df_plm_rep_rate_100,
+               model = "random")
+pFtest(within_rep_rate_100, pooling_rep_rate_100)
+phtest(within_rep_rate_100, random_rep_rate_100)
+
+df_plm_rep_log <- df_dif_all |> 
+  filter(name == "rep_log") |> 
+  pdata.frame(index = c("state", "name"), drop.index = FALSE)
+pooling_rep_log <- plm(value ~ median_age + males_per_100_females + white_rate +
+               personal_income + fy2012 + fy2016 + fy2020, data = df_plm_rep_log,
+               model = "pooling")
+within_rep_log <- plm(value ~ median_age + males_per_100_females + white_rate +
+               personal_income + fy2012 + fy2016 + fy2020, data = df_plm_rep_log,
+               model = "within")
+random_rep_log <- plm(value ~ median_age + males_per_100_females + white_rate +
+               personal_income + fy2012 + fy2016 + fy2020, data = df_plm_rep_log,
+               model = "random")
+pFtest(within_rep_log, pooling_rep_log)
+phtest(within_rep_log, random_rep_log)
+
+df_plm_dem_log <- df_dif_all |> 
+  filter(name == "dem_log") |> 
+  pdata.frame(index = c("state", "name"), drop.index = FALSE)
+pooling_dem_log <- plm(value ~ median_age + males_per_100_females + white_rate +
+               personal_income + fy2012 + fy2016 + fy2020, data = df_plm_dem_log,
+               model = "pooling")
+within_dem_log <- plm(value ~ median_age + males_per_100_females + white_rate +
+               personal_income + fy2012 + fy2016 + fy2020, data = df_plm_dem_log,
+               model = "within")
+random_dem_log <- plm(value ~ median_age + males_per_100_females + white_rate +
+               personal_income + fy2012 + fy2016 + fy2020, data = df_plm_dem_log,
+               model = "random")
+pFtest(within_dem_log, pooling_dem_log)
+phtest(within_dem_log, random_dem_log)
+```
+
+## 共和党投票数の自然対数を目的変数とした回帰分析(random)
+```{r}
+#| echo: true
+summary(random_rep_log)
+```
+
+## 民主党投票数の自然対数を目的変数とした回帰分析(random)
+```{r}
+#| echo: true
+summary(random_dem_log)
+```
+
+## rep+dem=1としたときのdem_rateを目的変数とした回帰分析(random)
+```{r}
+#| echo: true
+summary(random_rep_rate_100)
+```
+
+```{r}
+df_2024_2020 <- map(c("rep_log", "dem_log", "rep_rate_100"), ~{
+  df_add |> 
+  filter(name == c(.x)) |> 
+  filter(year %in% c(2020, 2024)) |> 
+  mutate(year = str_c("fy", year)) |> 
+  pivot_wider(names_from = year) |> 
+  mutate(value = fy2024 - fy2020) |> 
+  select(-fy2020, -fy2024)
+}) |> list_rbind() |> 
+  left_join(df_database, by = "state") |> 
+  select(-over_18years_old, -black_rate)
+
+rep_log_2024_2020 <- df_2024_2020 |> 
+  filter(name == "rep_log") |> 
+  select(-state, -name)
+lm_rep_log <- lm(value ~ ., data = rep_log_2024_2020)
+
+dem_log_2024_2020 <- df_2024_2020 |> 
+  filter(name == "dem_log") |> 
+  select(-state, -name)
+lm_dem_log <- lm(value ~ ., data = dem_log_2024_2020)
+summary(lm_dem_log)
+
+rep_rate_100_2024_2020 <- df_2024_2020 |> 
+  filter(name == "rep_rate_100") |> 
+  select(-state, -name)
+lm_rep_rate_100 <- lm(value ~ ., data = rep_rate_100_2024_2020)
+summary(lm_rep_rate_100)
+```
+
+# おまけ）2020→2024年に起こった変化をOLSで解析
+
+## 共和党投票数の自然対数の差を目的変数とした回帰分析(OLS)
+
+$ln(fy2024) - ln(fy2020) = ln(fy2024 / fy2020)$
+
+```{r}
+summary(lm_rep_log)
+```
+
+## 民主党投票数の自然対数の差を目的変数とした回帰分析(OLS)
+
+$ln(fy2024) - ln(fy2020) = ln(fy2024 / fy2020)$
+
+```{r}
+summary(lm_dem_log)
+```
+
+## rep+dem=1としたときのrep_rateの差を目的変数とした回帰分析(OLS)
+
+```{r}
+summary(lm_rep_rate_100)
+```
+
+## まとめ
+
+- 時系列データをパネルデータにすると、有意差が出やすくておもしろいよ。
+- 報道やSNSの論評を信頼しすぎず、データが公開されているものは、解析してみるとおもしろいよ。
+
+# Enjoy！
