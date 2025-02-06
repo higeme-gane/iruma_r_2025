@@ -360,8 +360,7 @@ $y_{it} = \alpha + x_{it} \beta + \mu_i + u_{it} \quad | \quad Cov(\mu_i, x_{it}
 
 $\mu_i$がランダムのため、$\beta$と分散パラメータ$\sigma_\mu^2, \sigma_u^2$などを推定するだけですむ。
 
-
-## パネルデータの作り方
+## パネルデータの作り方 plm::pdate.frame()
 ```{r}
 #| echo: true
 df_dif_rate_2 <- df_add |> 
@@ -371,8 +370,9 @@ df_dif_rate_2 <- df_add |>
 df_rep_100 <- df_dif_rate_2 |> 
   filter(name == "rep_rate_100")
 library(plm)
-plm_rep_100 <- pdata.frame(df_rep_100, index = c("state", "year"))
-head(plm_rep_100, n = 12)
+plm_rep_100 <- pdata.frame(df_rep_100, index = c("state", "year"),
+                           drop.index = FALSE)
+head(plm_rep_100, n = 8)
 ```
 
 ## 回帰分析式
@@ -728,4 +728,14 @@ summary(lm_rep_rate_100)
 - 時系列データをパネルデータにすると、有意差が出やすくておもしろいよ。
 - 報道やSNSの論評を信頼しすぎず、データが公開されているものは、解析してみるとおもしろいよ。
 
-# Enjoy！
+## References
+
+- Wooldridge J. M. Introductory Econometrics A Modern Approach 5th Edition. South-Western Pub, Sep. 2012.
+
+- Hausman J. A. Specification tests in econometrics. Econometrica, Vol. 46, No. 6, p. 1251–1271, 1978.
+
+- Anderson T.W. An Introduction to Multivariate Statistical Analysis. WILEY-INTERSCIENCE, 1984.
+
+- Stock J. and Yogo M. Testing for Weak Instruments in Linear IV Regression, pp. 80–108. Cambridge University Press, New York, 2005.
+
+# Enjoy!
