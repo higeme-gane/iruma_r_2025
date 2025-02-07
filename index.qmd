@@ -662,7 +662,7 @@ summary(random_rep_log)
 summary(random_dem_log)
 ```
 
-## rep+dem=1としたときのdem_rateを目的変数とした回帰分析(random)
+## rep+dem=1としたときのrep_rateを目的変数とした回帰分析(random)
 ```{r}
 #| echo: true
 summary(random_rep_rate_100)
