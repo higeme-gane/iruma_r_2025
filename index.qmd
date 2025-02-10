@@ -20,7 +20,7 @@ library(reshape2)
 library(stargazer)
 library(psych)
 library(openxlsx)
-library(psych)
+library(makedummies)
 conflicts_prefer(dplyr::filter)
 conflicts_prefer(plotly::layout)
 conflicts_prefer(purrr::map)
@@ -363,13 +363,12 @@ $\mu_i$がランダムのため、$\beta$と分散パラメータ$\sigma_\mu^2, 
 ## パネルデータの作り方 plm::pdate.frame()
 ```{r}
 #| echo: true
+library(plm)
 df_dif_rate_2 <- df_add |> 
-  mutate(fy2012 = if_else(year == 2012, 1, 0)) |> 
-  mutate(fy2016 = if_else(year == 2016, 1, 0)) |> 
-  mutate(fy2020 = if_else(year == 2020, 1, 0))
+  mutate(fy = as.factor(year)) |> 
+  makedummies(, basal_level = TRUE)
 df_rep_100 <- df_dif_rate_2 |> 
   filter(name == "rep_rate_100")
-library(plm)
 plm_rep_100 <- pdata.frame(df_rep_100, index = c("state", "year"),
                            drop.index = FALSE)
 head(plm_rep_100, n = 8)
@@ -392,11 +391,11 @@ $n_{(fy24)} = \beta_0$
 ## コードと結果(目的変数:rep+dem=1としたときのrep_rate)
 ```{r}
 #| echo: true
-pooling_2024 <- plm(value ~ fy2012 + fy2016 + fy2020,
+pooling_2024 <- plm(value ~ fy_2012 + fy_2016 + fy_2020,
                     data = plm_rep_100, model = "pooling")
-within_2024 <- plm(value ~ fy2012 + fy2016 + fy2020,
+within_2024 <- plm(value ~ fy_2012 + fy_2016 + fy_2020,
                    data = plm_rep_100, model = "within")
-random_2024 <- plm(value ~ fy2012 + fy2016 + fy2020,
+random_2024 <- plm(value ~ fy_2012 + fy_2016 + fy_2020,
                    data = plm_rep_100, model = "random")
 stargazer(pooling_2024, within_2024, random_2024, type = "text")
 ```
@@ -572,13 +571,13 @@ df_plm_total_log <- df_dif_all |>
   filter(name == "total_log") |> 
   pdata.frame(index = c("state", "name"), drop.index = FALSE)
 pooling_total_log <- plm(value ~ median_age + males_per_100_females + white_rate +
-               personal_income + fy2012 + fy2016 + fy2020, data = df_plm_total_log,
+               personal_income + fy_2012 + fy_2016 + fy_2020, data = df_plm_total_log,
                model = "pooling")
 within_total_log <- plm(value ~ median_age + males_per_100_females + white_rate +
-               personal_income + fy2012 + fy2016 + fy2020, data = df_plm_total_log,
+               personal_income + fy_2012 + fy_2016 + fy_2020, data = df_plm_total_log,
                model = "within")
 random_total_log <- plm(value ~ median_age + males_per_100_females + white_rate +
-               personal_income + fy2012 + fy2016 + fy2020, data = df_plm_total_log,
+               personal_income + fy_2012 + fy_2016 + fy_2020, data = df_plm_total_log,
                model = "random")
 ```
 
@@ -608,13 +607,13 @@ df_plm_rep_rate_100 <- df_dif_all |>
   filter(name == "rep_rate_100") |> 
   pdata.frame(index = c("state", "name"), drop.index = FALSE)
 pooling_rep_rate_100 <- plm(value ~ median_age + males_per_100_females + white_rate +
-               personal_income + fy2012 + fy2016 + fy2020, data = df_plm_rep_rate_100,
+               personal_income + fy_2012 + fy_2016 + fy_2020, data = df_plm_rep_rate_100,
                model = "pooling")
 within_rep_rate_100 <- plm(value ~ median_age + males_per_100_females + white_rate +
-               personal_income + fy2012 + fy2016 + fy2020, data = df_plm_rep_rate_100,
+               personal_income + fy_2012 + fy_2016 + fy_2020, data = df_plm_rep_rate_100,
                model = "within")
 random_rep_rate_100 <- plm(value ~ median_age + males_per_100_females + white_rate +
-               personal_income + fy2012 + fy2016 + fy2020, data = df_plm_rep_rate_100,
+               personal_income + fy_2012 + fy_2016 + fy_2020, data = df_plm_rep_rate_100,
                model = "random")
 pFtest(within_rep_rate_100, pooling_rep_rate_100)
 phtest(within_rep_rate_100, random_rep_rate_100)
@@ -623,13 +622,13 @@ df_plm_rep_log <- df_dif_all |>
   filter(name == "rep_log") |> 
   pdata.frame(index = c("state", "name"), drop.index = FALSE)
 pooling_rep_log <- plm(value ~ median_age + males_per_100_females + white_rate +
-               personal_income + fy2012 + fy2016 + fy2020, data = df_plm_rep_log,
+               personal_income + fy_2012 + fy_2016 + fy_2020, data = df_plm_rep_log,
                model = "pooling")
 within_rep_log <- plm(value ~ median_age + males_per_100_females + white_rate +
-               personal_income + fy2012 + fy2016 + fy2020, data = df_plm_rep_log,
+               personal_income + fy_2012 + fy_2016 + fy_2020, data = df_plm_rep_log,
                model = "within")
 random_rep_log <- plm(value ~ median_age + males_per_100_females + white_rate +
-               personal_income + fy2012 + fy2016 + fy2020, data = df_plm_rep_log,
+               personal_income + fy_2012 + fy_2016 + fy_2020, data = df_plm_rep_log,
                model = "random")
 pFtest(within_rep_log, pooling_rep_log)
 phtest(within_rep_log, random_rep_log)
@@ -638,13 +637,13 @@ df_plm_dem_log <- df_dif_all |>
   filter(name == "dem_log") |> 
   pdata.frame(index = c("state", "name"), drop.index = FALSE)
 pooling_dem_log <- plm(value ~ median_age + males_per_100_females + white_rate +
-               personal_income + fy2012 + fy2016 + fy2020, data = df_plm_dem_log,
+               personal_income + fy_2012 + fy_2016 + fy_2020, data = df_plm_dem_log,
                model = "pooling")
 within_dem_log <- plm(value ~ median_age + males_per_100_females + white_rate +
-               personal_income + fy2012 + fy2016 + fy2020, data = df_plm_dem_log,
+               personal_income + fy_2012 + fy_2016 + fy_2020, data = df_plm_dem_log,
                model = "within")
 random_dem_log <- plm(value ~ median_age + males_per_100_females + white_rate +
-               personal_income + fy2012 + fy2016 + fy2020, data = df_plm_dem_log,
+               personal_income + fy_2012 + fy_2016 + fy_2020, data = df_plm_dem_log,
                model = "random")
 pFtest(within_dem_log, pooling_dem_log)
 phtest(within_dem_log, random_dem_log)
@@ -673,10 +672,10 @@ df_2024_2020 <- map(c("rep_log", "dem_log", "rep_rate_100"), ~{
   df_add |> 
   filter(name == c(.x)) |> 
   filter(year %in% c(2020, 2024)) |> 
-  mutate(year = str_c("fy", year)) |> 
+  mutate(year = str_c("fy_", year)) |> 
   pivot_wider(names_from = year) |> 
-  mutate(value = fy2024 - fy2020) |> 
-  select(-fy2020, -fy2024)
+  mutate(value = fy_2024 - fy_2020) |> 
+  select(-fy_2020, -fy_2024)
 }) |> list_rbind() |> 
   left_join(df_database, by = "state") |> 
   select(-over_18years_old, -black_rate)
@@ -703,7 +702,7 @@ summary(lm_rep_rate_100)
 
 ## 共和党投票数の自然対数の差を目的変数とした回帰分析(OLS)
 
-$ln(fy2024) - ln(fy2020) = ln(fy2024 / fy2020)$
+$ln(fy_2024) - ln(fy_2020) = ln(fy_2024 / fy_2020)$
 
 ```{r}
 summary(lm_rep_log)
@@ -711,7 +710,7 @@ summary(lm_rep_log)
 
 ## 民主党投票数の自然対数の差を目的変数とした回帰分析(OLS)
 
-$ln(fy2024) - ln(fy2020) = ln(fy2024 / fy2020)$
+$ln(fy_2024) - ln(fy_2020) = ln(fy_2024 / fy_2020)$
 
 ```{r}
 summary(lm_dem_log)

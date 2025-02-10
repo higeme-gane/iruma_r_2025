@@ -623,26 +623,34 @@
 <section id="パネルデータの作り方-plmpdate.frame" class="slide level2">
 <h2>パネルデータの作り方 plm::pdate.frame()</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href=""></a>df_dif_rate_2 <span class="ot">&lt;-</span> df_add <span class="sc">|&gt;</span> </span>
-<span id="cb2-2"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">fy2012 =</span> <span class="fu">if_else</span>(year <span class="sc">==</span> <span class="dv">2012</span>, <span class="dv">1</span>, <span class="dv">0</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb2-3"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">fy2016 =</span> <span class="fu">if_else</span>(year <span class="sc">==</span> <span class="dv">2016</span>, <span class="dv">1</span>, <span class="dv">0</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb2-4"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">fy2020 =</span> <span class="fu">if_else</span>(year <span class="sc">==</span> <span class="dv">2020</span>, <span class="dv">1</span>, <span class="dv">0</span>))</span>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href=""></a><span class="fu">library</span>(plm)</span>
+<span id="cb2-2"><a href=""></a>df_dif_rate_2 <span class="ot">&lt;-</span> df_add <span class="sc">|&gt;</span> </span>
+<span id="cb2-3"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">fy =</span> <span class="fu">as.factor</span>(year)) <span class="sc">|&gt;</span> </span>
+<span id="cb2-4"><a href=""></a>  <span class="fu">makedummies</span>(, <span class="at">basal_level =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb2-5"><a href=""></a>df_rep_100 <span class="ot">&lt;-</span> df_dif_rate_2 <span class="sc">|&gt;</span> </span>
 <span id="cb2-6"><a href=""></a>  <span class="fu">filter</span>(name <span class="sc">==</span> <span class="st">"rep_rate_100"</span>)</span>
-<span id="cb2-7"><a href=""></a><span class="fu">library</span>(plm)</span>
-<span id="cb2-8"><a href=""></a>plm_rep_100 <span class="ot">&lt;-</span> <span class="fu">pdata.frame</span>(df_rep_100, <span class="at">index =</span> <span class="fu">c</span>(<span class="st">"state"</span>, <span class="st">"year"</span>),</span>
-<span id="cb2-9"><a href=""></a>                           <span class="at">drop.index =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb2-10"><a href=""></a><span class="fu">head</span>(plm_rep_100, <span class="at">n =</span> <span class="dv">8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-7"><a href=""></a>plm_rep_100 <span class="ot">&lt;-</span> <span class="fu">pdata.frame</span>(df_rep_100, <span class="at">index =</span> <span class="fu">c</span>(<span class="st">"state"</span>, <span class="st">"year"</span>),</span>
+<span id="cb2-8"><a href=""></a>                           <span class="at">drop.index =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb2-9"><a href=""></a><span class="fu">head</span>(plm_rep_100, <span class="at">n =</span> <span class="dv">8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>               state year         name     value fy2012 fy2016 fy2020
-alabama-2012 alabama 2012 rep_rate_100 0.6121623      1      0      0
-alabama-2016 alabama 2016 rep_rate_100 0.6437414      0      1      0
-alabama-2020 alabama 2020 rep_rate_100 0.6291137      0      0      1
-alabama-2024 alabama 2024 rep_rate_100 0.6544061      0      0      0
-alaska-2012   alaska 2012 rep_rate_100 0.5731529      1      0      0
-alaska-2016   alaska 2016 rep_rate_100 0.5838565      0      1      0
-alaska-2020   alaska 2020 rep_rate_100 0.5526185      0      0      1
-alaska-2024   alaska 2024 rep_rate_100 0.5684656      0      0      0</code></pre>
+<pre><code>               state year         name     value fy_2012 fy_2016 fy_2020
+alabama-2012 alabama 2012 rep_rate_100 0.6121623       1       0       0
+alabama-2016 alabama 2016 rep_rate_100 0.6437414       0       1       0
+alabama-2020 alabama 2020 rep_rate_100 0.6291137       0       0       1
+alabama-2024 alabama 2024 rep_rate_100 0.6544061       0       0       0
+alaska-2012   alaska 2012 rep_rate_100 0.5731529       1       0       0
+alaska-2016   alaska 2016 rep_rate_100 0.5838565       0       1       0
+alaska-2020   alaska 2020 rep_rate_100 0.5526185       0       0       1
+alaska-2024   alaska 2024 rep_rate_100 0.5684656       0       0       0
+             fy_2024
+alabama-2012       0
+alabama-2016       0
+alabama-2020       0
+alabama-2024       1
+alaska-2012        0
+alaska-2016        0
+alaska-2020        0
+alaska-2024        1</code></pre>
 </div>
 </div>
 </section>
@@ -658,11 +666,11 @@ alaska-2024   alaska 2024 rep_rate_100 0.5684656      0      0      0</code></pr
 <section id="コードと結果目的変数repdem1としたときのrep_rate" class="slide level2">
 <h2>コードと結果(目的変数:rep+dem=1としたときのrep_rate)</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href=""></a>pooling_2024 <span class="ot">&lt;-</span> <span class="fu">plm</span>(value <span class="sc">~</span> fy2012 <span class="sc">+</span> fy2016 <span class="sc">+</span> fy2020,</span>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href=""></a>pooling_2024 <span class="ot">&lt;-</span> <span class="fu">plm</span>(value <span class="sc">~</span> fy_2012 <span class="sc">+</span> fy_2016 <span class="sc">+</span> fy_2020,</span>
 <span id="cb4-2"><a href=""></a>                    <span class="at">data =</span> plm_rep_100, <span class="at">model =</span> <span class="st">"pooling"</span>)</span>
-<span id="cb4-3"><a href=""></a>within_2024 <span class="ot">&lt;-</span> <span class="fu">plm</span>(value <span class="sc">~</span> fy2012 <span class="sc">+</span> fy2016 <span class="sc">+</span> fy2020,</span>
+<span id="cb4-3"><a href=""></a>within_2024 <span class="ot">&lt;-</span> <span class="fu">plm</span>(value <span class="sc">~</span> fy_2012 <span class="sc">+</span> fy_2016 <span class="sc">+</span> fy_2020,</span>
 <span id="cb4-4"><a href=""></a>                   <span class="at">data =</span> plm_rep_100, <span class="at">model =</span> <span class="st">"within"</span>)</span>
-<span id="cb4-5"><a href=""></a>random_2024 <span class="ot">&lt;-</span> <span class="fu">plm</span>(value <span class="sc">~</span> fy2012 <span class="sc">+</span> fy2016 <span class="sc">+</span> fy2020,</span>
+<span id="cb4-5"><a href=""></a>random_2024 <span class="ot">&lt;-</span> <span class="fu">plm</span>(value <span class="sc">~</span> fy_2012 <span class="sc">+</span> fy_2016 <span class="sc">+</span> fy_2020,</span>
 <span id="cb4-6"><a href=""></a>                   <span class="at">data =</span> plm_rep_100, <span class="at">model =</span> <span class="st">"random"</span>)</span>
 <span id="cb4-7"><a href=""></a><span class="fu">stargazer</span>(pooling_2024, within_2024, random_2024, <span class="at">type =</span> <span class="st">"text"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -673,13 +681,13 @@ alaska-2024   alaska 2024 rep_rate_100 0.5684656      0      0      0</code></pr
                                      value                        
                      (1)                   (2)              (3)   
 ------------------------------------------------------------------
-fy2012             -0.025               -0.025***        -0.025***
+fy_2012            -0.025               -0.025***        -0.025***
                    (0.024)               (0.004)          (0.004) 
                                                                   
-fy2016             -0.005                -0.005           -0.005  
+fy_2016            -0.005                -0.005           -0.005  
                    (0.024)               (0.004)          (0.004) 
                                                                   
-fy2020             -0.022               -0.022***        -0.022***
+fy_2020            -0.022               -0.022***        -0.022***
                    (0.024)               (0.004)          (0.004) 
                                                                   
 Constant          0.525***                               0.525*** 
@@ -706,7 +714,7 @@ Note:                                  *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01</cod
 <pre><code>
     F test for individual effects
 
-data:  value ~ fy2012 + fy2016 + fy2020
+data:  value ~ fy_2012 + fy_2016 + fy_2020
 F = 134.32, df1 = 50, df2 = 150, p-value &lt; 2.2e-16
 alternative hypothesis: significant effects</code></pre>
 </div>
@@ -723,7 +731,7 @@ alternative hypothesis: significant effects</code></pre>
 <pre><code>
     Hausman Test
 
-data:  value ~ fy2012 + fy2016 + fy2020
+data:  value ~ fy_2012 + fy_2016 + fy_2020
 chisq = 6.6658e-14, df = 3, p-value = 1
 alternative hypothesis: one model is inconsistent</code></pre>
 </div>
@@ -818,8 +826,8 @@ alternative hypothesis: one model is inconsistent</code></pre>
 <h2>Heat Map</h2>
 <div class="cell">
 <div class="cell-output-display">
-<div class="plotly html-widget html-fill-item" id="htmlwidget-da0c9f01e02cfdfc8852" style="width:960px;height:480px;"></div>
-<script type="application/json" data-for="htmlwidget-da0c9f01e02cfdfc8852">{"x":{"visdat":{"42d0fa559bf":["function () ","plotlyVisDat"]},"cur_data":"42d0fa559bf","attrs":{"42d0fa559bf":{"x":["over_18years_old","median_age","males_per_100_females","white_rate","black_rate","personal_income","over_18years_old","median_age","males_per_100_females","white_rate","black_rate","personal_income","over_18years_old","median_age","males_per_100_females","white_rate","black_rate","personal_income","over_18years_old","median_age","males_per_100_females","white_rate","black_rate","personal_income","over_18years_old","median_age","males_per_100_females","white_rate","black_rate","personal_income","over_18years_old","median_age","males_per_100_females","white_rate","black_rate","personal_income"],"y":["over_18years_old","over_18years_old","over_18years_old","over_18years_old","over_18years_old","over_18years_old","median_age","median_age","median_age","median_age","median_age","median_age","males_per_100_females","males_per_100_females","males_per_100_females","males_per_100_females","males_per_100_females","males_per_100_females","white_rate","white_rate","white_rate","white_rate","white_rate","white_rate","black_rate","black_rate","black_rate","black_rate","black_rate","black_rate","personal_income","personal_income","personal_income","personal_income","personal_income","personal_income"],"z":[1,-0.065784495280183375,-0.14514150648949237,-0.38718160880112851,0.12506512894667143,0.1303535587765286,-0.065784495280183375,1,-0.27494607541108435,0.20385356272282457,-0.12150100855879276,-0.10510435695885476,-0.14514150648949237,-0.27494607541108435,1,0.31369520442134585,-0.74426871174489728,-0.028370761212803842,-0.38718160880112851,0.20385356272282457,0.31369520442134585,1,-0.49961338839841879,-0.20105271984739484,0.12506512894667143,-0.12150100855879276,-0.74426871174489728,-0.49961338839841879,1,-9.2857598099327642e-05,0.1303535587765286,-0.10510435695885476,-0.028370761212803842,-0.20105271984739484,-9.2857598099327642e-05,1],"colorscale":"RdBu","zmin":-1,"zmax":1,"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"heatmap"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"Correlation Matrix Heatmap","xaxis":{"domain":[0,1],"automargin":true,"title":"","type":"category","categoryorder":"array","categoryarray":["over_18years_old","median_age","males_per_100_females","white_rate","black_rate","personal_income"]},"yaxis":{"domain":[0,1],"automargin":true,"title":"","type":"category","categoryorder":"array","categoryarray":["over_18years_old","median_age","males_per_100_females","white_rate","black_rate","personal_income"]},"annotations":[{"x":"over_18years_old","y":"over_18years_old","text":1,"showarrow":false,"font":{"color":"white"}},{"x":"median_age","y":"over_18years_old","text":-0.070000000000000007,"showarrow":false,"font":{"color":"white"}},{"x":"males_per_100_females","y":"over_18years_old","text":-0.14999999999999999,"showarrow":false,"font":{"color":"white"}},{"x":"white_rate","y":"over_18years_old","text":-0.39000000000000001,"showarrow":false,"font":{"color":"white"}},{"x":"black_rate","y":"over_18years_old","text":0.13,"showarrow":false,"font":{"color":"white"}},{"x":"personal_income","y":"over_18years_old","text":0.13,"showarrow":false,"font":{"color":"white"}},{"x":"over_18years_old","y":"median_age","text":-0.070000000000000007,"showarrow":false,"font":{"color":"white"}},{"x":"median_age","y":"median_age","text":1,"showarrow":false,"font":{"color":"white"}},{"x":"males_per_100_females","y":"median_age","text":-0.27000000000000002,"showarrow":false,"font":{"color":"white"}},{"x":"white_rate","y":"median_age","text":0.20000000000000001,"showarrow":false,"font":{"color":"white"}},{"x":"black_rate","y":"median_age","text":-0.12,"showarrow":false,"font":{"color":"white"}},{"x":"personal_income","y":"median_age","text":-0.11,"showarrow":false,"font":{"color":"white"}},{"x":"over_18years_old","y":"males_per_100_females","text":-0.14999999999999999,"showarrow":false,"font":{"color":"white"}},{"x":"median_age","y":"males_per_100_females","text":-0.27000000000000002,"showarrow":false,"font":{"color":"white"}},{"x":"males_per_100_females","y":"males_per_100_females","text":1,"showarrow":false,"font":{"color":"white"}},{"x":"white_rate","y":"males_per_100_females","text":0.31,"showarrow":false,"font":{"color":"white"}},{"x":"black_rate","y":"males_per_100_females","text":-0.73999999999999999,"showarrow":false,"font":{"color":"white"}},{"x":"personal_income","y":"males_per_100_females","text":-0.029999999999999999,"showarrow":false,"font":{"color":"white"}},{"x":"over_18years_old","y":"white_rate","text":-0.39000000000000001,"showarrow":false,"font":{"color":"white"}},{"x":"median_age","y":"white_rate","text":0.20000000000000001,"showarrow":false,"font":{"color":"white"}},{"x":"males_per_100_females","y":"white_rate","text":0.31,"showarrow":false,"font":{"color":"white"}},{"x":"white_rate","y":"white_rate","text":1,"showarrow":false,"font":{"color":"white"}},{"x":"black_rate","y":"white_rate","text":-0.5,"showarrow":false,"font":{"color":"white"}},{"x":"personal_income","y":"white_rate","text":-0.20000000000000001,"showarrow":false,"font":{"color":"white"}},{"x":"over_18years_old","y":"black_rate","text":0.13,"showarrow":false,"font":{"color":"white"}},{"x":"median_age","y":"black_rate","text":-0.12,"showarrow":false,"font":{"color":"white"}},{"x":"males_per_100_females","y":"black_rate","text":-0.73999999999999999,"showarrow":false,"font":{"color":"white"}},{"x":"white_rate","y":"black_rate","text":-0.5,"showarrow":false,"font":{"color":"white"}},{"x":"black_rate","y":"black_rate","text":1,"showarrow":false,"font":{"color":"white"}},{"x":"personal_income","y":"black_rate","text":-0,"showarrow":false,"font":{"color":"white"}},{"x":"over_18years_old","y":"personal_income","text":0.13,"showarrow":false,"font":{"color":"white"}},{"x":"median_age","y":"personal_income","text":-0.11,"showarrow":false,"font":{"color":"white"}},{"x":"males_per_100_females","y":"personal_income","text":-0.029999999999999999,"showarrow":false,"font":{"color":"white"}},{"x":"white_rate","y":"personal_income","text":-0.20000000000000001,"showarrow":false,"font":{"color":"white"}},{"x":"black_rate","y":"personal_income","text":-0,"showarrow":false,"font":{"color":"white"}},{"x":"personal_income","y":"personal_income","text":1,"showarrow":false,"font":{"color":"white"}}],"scene":{"zaxis":{"title":[]}},"hovermode":"closest","showlegend":false,"legend":{"yanchor":"top","y":0.5}},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"colorbar":{"title":"","ticklen":2,"len":0.5,"lenmode":"fraction","y":1,"yanchor":"top"},"colorscale":"RdBu","showscale":true,"x":["over_18years_old","median_age","males_per_100_females","white_rate","black_rate","personal_income","over_18years_old","median_age","males_per_100_females","white_rate","black_rate","personal_income","over_18years_old","median_age","males_per_100_females","white_rate","black_rate","personal_income","over_18years_old","median_age","males_per_100_females","white_rate","black_rate","personal_income","over_18years_old","median_age","males_per_100_females","white_rate","black_rate","personal_income","over_18years_old","median_age","males_per_100_females","white_rate","black_rate","personal_income"],"y":["over_18years_old","over_18years_old","over_18years_old","over_18years_old","over_18years_old","over_18years_old","median_age","median_age","median_age","median_age","median_age","median_age","males_per_100_females","males_per_100_females","males_per_100_females","males_per_100_females","males_per_100_females","males_per_100_females","white_rate","white_rate","white_rate","white_rate","white_rate","white_rate","black_rate","black_rate","black_rate","black_rate","black_rate","black_rate","personal_income","personal_income","personal_income","personal_income","personal_income","personal_income"],"z":[1,-0.065784495280183375,-0.14514150648949237,-0.38718160880112851,0.12506512894667143,0.1303535587765286,-0.065784495280183375,1,-0.27494607541108435,0.20385356272282457,-0.12150100855879276,-0.10510435695885476,-0.14514150648949237,-0.27494607541108435,1,0.31369520442134585,-0.74426871174489728,-0.028370761212803842,-0.38718160880112851,0.20385356272282457,0.31369520442134585,1,-0.49961338839841879,-0.20105271984739484,0.12506512894667143,-0.12150100855879276,-0.74426871174489728,-0.49961338839841879,1,-9.2857598099327642e-05,0.1303535587765286,-0.10510435695885476,-0.028370761212803842,-0.20105271984739484,-9.2857598099327642e-05,1],"zmin":-1,"zmax":1,"type":"heatmap","xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<div class="plotly html-widget html-fill-item" id="htmlwidget-123c46a0a85be53840ec" style="width:960px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-123c46a0a85be53840ec">{"x":{"visdat":{"49101de15565":["function () ","plotlyVisDat"]},"cur_data":"49101de15565","attrs":{"49101de15565":{"x":["over_18years_old","median_age","males_per_100_females","white_rate","black_rate","personal_income","over_18years_old","median_age","males_per_100_females","white_rate","black_rate","personal_income","over_18years_old","median_age","males_per_100_females","white_rate","black_rate","personal_income","over_18years_old","median_age","males_per_100_females","white_rate","black_rate","personal_income","over_18years_old","median_age","males_per_100_females","white_rate","black_rate","personal_income","over_18years_old","median_age","males_per_100_females","white_rate","black_rate","personal_income"],"y":["over_18years_old","over_18years_old","over_18years_old","over_18years_old","over_18years_old","over_18years_old","median_age","median_age","median_age","median_age","median_age","median_age","males_per_100_females","males_per_100_females","males_per_100_females","males_per_100_females","males_per_100_females","males_per_100_females","white_rate","white_rate","white_rate","white_rate","white_rate","white_rate","black_rate","black_rate","black_rate","black_rate","black_rate","black_rate","personal_income","personal_income","personal_income","personal_income","personal_income","personal_income"],"z":[1,-0.065784495280183375,-0.14514150648949237,-0.38718160880112851,0.12506512894667143,0.1303535587765286,-0.065784495280183375,1,-0.27494607541108435,0.20385356272282457,-0.12150100855879276,-0.10510435695885476,-0.14514150648949237,-0.27494607541108435,1,0.31369520442134585,-0.74426871174489728,-0.028370761212803842,-0.38718160880112851,0.20385356272282457,0.31369520442134585,1,-0.49961338839841879,-0.20105271984739484,0.12506512894667143,-0.12150100855879276,-0.74426871174489728,-0.49961338839841879,1,-9.2857598099327642e-05,0.1303535587765286,-0.10510435695885476,-0.028370761212803842,-0.20105271984739484,-9.2857598099327642e-05,1],"colorscale":"RdBu","zmin":-1,"zmax":1,"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"heatmap"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"Correlation Matrix Heatmap","xaxis":{"domain":[0,1],"automargin":true,"title":"","type":"category","categoryorder":"array","categoryarray":["over_18years_old","median_age","males_per_100_females","white_rate","black_rate","personal_income"]},"yaxis":{"domain":[0,1],"automargin":true,"title":"","type":"category","categoryorder":"array","categoryarray":["over_18years_old","median_age","males_per_100_females","white_rate","black_rate","personal_income"]},"annotations":[{"x":"over_18years_old","y":"over_18years_old","text":1,"showarrow":false,"font":{"color":"white"}},{"x":"median_age","y":"over_18years_old","text":-0.070000000000000007,"showarrow":false,"font":{"color":"white"}},{"x":"males_per_100_females","y":"over_18years_old","text":-0.14999999999999999,"showarrow":false,"font":{"color":"white"}},{"x":"white_rate","y":"over_18years_old","text":-0.39000000000000001,"showarrow":false,"font":{"color":"white"}},{"x":"black_rate","y":"over_18years_old","text":0.13,"showarrow":false,"font":{"color":"white"}},{"x":"personal_income","y":"over_18years_old","text":0.13,"showarrow":false,"font":{"color":"white"}},{"x":"over_18years_old","y":"median_age","text":-0.070000000000000007,"showarrow":false,"font":{"color":"white"}},{"x":"median_age","y":"median_age","text":1,"showarrow":false,"font":{"color":"white"}},{"x":"males_per_100_females","y":"median_age","text":-0.27000000000000002,"showarrow":false,"font":{"color":"white"}},{"x":"white_rate","y":"median_age","text":0.20000000000000001,"showarrow":false,"font":{"color":"white"}},{"x":"black_rate","y":"median_age","text":-0.12,"showarrow":false,"font":{"color":"white"}},{"x":"personal_income","y":"median_age","text":-0.11,"showarrow":false,"font":{"color":"white"}},{"x":"over_18years_old","y":"males_per_100_females","text":-0.14999999999999999,"showarrow":false,"font":{"color":"white"}},{"x":"median_age","y":"males_per_100_females","text":-0.27000000000000002,"showarrow":false,"font":{"color":"white"}},{"x":"males_per_100_females","y":"males_per_100_females","text":1,"showarrow":false,"font":{"color":"white"}},{"x":"white_rate","y":"males_per_100_females","text":0.31,"showarrow":false,"font":{"color":"white"}},{"x":"black_rate","y":"males_per_100_females","text":-0.73999999999999999,"showarrow":false,"font":{"color":"white"}},{"x":"personal_income","y":"males_per_100_females","text":-0.029999999999999999,"showarrow":false,"font":{"color":"white"}},{"x":"over_18years_old","y":"white_rate","text":-0.39000000000000001,"showarrow":false,"font":{"color":"white"}},{"x":"median_age","y":"white_rate","text":0.20000000000000001,"showarrow":false,"font":{"color":"white"}},{"x":"males_per_100_females","y":"white_rate","text":0.31,"showarrow":false,"font":{"color":"white"}},{"x":"white_rate","y":"white_rate","text":1,"showarrow":false,"font":{"color":"white"}},{"x":"black_rate","y":"white_rate","text":-0.5,"showarrow":false,"font":{"color":"white"}},{"x":"personal_income","y":"white_rate","text":-0.20000000000000001,"showarrow":false,"font":{"color":"white"}},{"x":"over_18years_old","y":"black_rate","text":0.13,"showarrow":false,"font":{"color":"white"}},{"x":"median_age","y":"black_rate","text":-0.12,"showarrow":false,"font":{"color":"white"}},{"x":"males_per_100_females","y":"black_rate","text":-0.73999999999999999,"showarrow":false,"font":{"color":"white"}},{"x":"white_rate","y":"black_rate","text":-0.5,"showarrow":false,"font":{"color":"white"}},{"x":"black_rate","y":"black_rate","text":1,"showarrow":false,"font":{"color":"white"}},{"x":"personal_income","y":"black_rate","text":-0,"showarrow":false,"font":{"color":"white"}},{"x":"over_18years_old","y":"personal_income","text":0.13,"showarrow":false,"font":{"color":"white"}},{"x":"median_age","y":"personal_income","text":-0.11,"showarrow":false,"font":{"color":"white"}},{"x":"males_per_100_females","y":"personal_income","text":-0.029999999999999999,"showarrow":false,"font":{"color":"white"}},{"x":"white_rate","y":"personal_income","text":-0.20000000000000001,"showarrow":false,"font":{"color":"white"}},{"x":"black_rate","y":"personal_income","text":-0,"showarrow":false,"font":{"color":"white"}},{"x":"personal_income","y":"personal_income","text":1,"showarrow":false,"font":{"color":"white"}}],"scene":{"zaxis":{"title":[]}},"hovermode":"closest","showlegend":false,"legend":{"yanchor":"top","y":0.5}},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"colorbar":{"title":"","ticklen":2,"len":0.5,"lenmode":"fraction","y":1,"yanchor":"top"},"colorscale":"RdBu","showscale":true,"x":["over_18years_old","median_age","males_per_100_females","white_rate","black_rate","personal_income","over_18years_old","median_age","males_per_100_females","white_rate","black_rate","personal_income","over_18years_old","median_age","males_per_100_females","white_rate","black_rate","personal_income","over_18years_old","median_age","males_per_100_females","white_rate","black_rate","personal_income","over_18years_old","median_age","males_per_100_females","white_rate","black_rate","personal_income","over_18years_old","median_age","males_per_100_females","white_rate","black_rate","personal_income"],"y":["over_18years_old","over_18years_old","over_18years_old","over_18years_old","over_18years_old","over_18years_old","median_age","median_age","median_age","median_age","median_age","median_age","males_per_100_females","males_per_100_females","males_per_100_females","males_per_100_females","males_per_100_females","males_per_100_females","white_rate","white_rate","white_rate","white_rate","white_rate","white_rate","black_rate","black_rate","black_rate","black_rate","black_rate","black_rate","personal_income","personal_income","personal_income","personal_income","personal_income","personal_income"],"z":[1,-0.065784495280183375,-0.14514150648949237,-0.38718160880112851,0.12506512894667143,0.1303535587765286,-0.065784495280183375,1,-0.27494607541108435,0.20385356272282457,-0.12150100855879276,-0.10510435695885476,-0.14514150648949237,-0.27494607541108435,1,0.31369520442134585,-0.74426871174489728,-0.028370761212803842,-0.38718160880112851,0.20385356272282457,0.31369520442134585,1,-0.49961338839841879,-0.20105271984739484,0.12506512894667143,-0.12150100855879276,-0.74426871174489728,-0.49961338839841879,1,-9.2857598099327642e-05,0.1303535587765286,-0.10510435695885476,-0.028370761212803842,-0.20105271984739484,-9.2857598099327642e-05,1],"zmin":-1,"zmax":1,"type":"heatmap","xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </section>
@@ -845,13 +853,13 @@ alternative hypothesis: one model is inconsistent</code></pre>
 <span id="cb10-2"><a href=""></a>  <span class="fu">filter</span>(name <span class="sc">==</span> <span class="st">"total_log"</span>) <span class="sc">|&gt;</span> </span>
 <span id="cb10-3"><a href=""></a>  <span class="fu">pdata.frame</span>(<span class="at">index =</span> <span class="fu">c</span>(<span class="st">"state"</span>, <span class="st">"name"</span>), <span class="at">drop.index =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb10-4"><a href=""></a>pooling_total_log <span class="ot">&lt;-</span> <span class="fu">plm</span>(value <span class="sc">~</span> median_age <span class="sc">+</span> males_per_100_females <span class="sc">+</span> white_rate <span class="sc">+</span></span>
-<span id="cb10-5"><a href=""></a>               personal_income <span class="sc">+</span> fy2012 <span class="sc">+</span> fy2016 <span class="sc">+</span> fy2020, <span class="at">data =</span> df_plm_total_log,</span>
+<span id="cb10-5"><a href=""></a>               personal_income <span class="sc">+</span> fy_2012 <span class="sc">+</span> fy_2016 <span class="sc">+</span> fy_2020, <span class="at">data =</span> df_plm_total_log,</span>
 <span id="cb10-6"><a href=""></a>               <span class="at">model =</span> <span class="st">"pooling"</span>)</span>
 <span id="cb10-7"><a href=""></a>within_total_log <span class="ot">&lt;-</span> <span class="fu">plm</span>(value <span class="sc">~</span> median_age <span class="sc">+</span> males_per_100_females <span class="sc">+</span> white_rate <span class="sc">+</span></span>
-<span id="cb10-8"><a href=""></a>               personal_income <span class="sc">+</span> fy2012 <span class="sc">+</span> fy2016 <span class="sc">+</span> fy2020, <span class="at">data =</span> df_plm_total_log,</span>
+<span id="cb10-8"><a href=""></a>               personal_income <span class="sc">+</span> fy_2012 <span class="sc">+</span> fy_2016 <span class="sc">+</span> fy_2020, <span class="at">data =</span> df_plm_total_log,</span>
 <span id="cb10-9"><a href=""></a>               <span class="at">model =</span> <span class="st">"within"</span>)</span>
 <span id="cb10-10"><a href=""></a>random_total_log <span class="ot">&lt;-</span> <span class="fu">plm</span>(value <span class="sc">~</span> median_age <span class="sc">+</span> males_per_100_females <span class="sc">+</span> white_rate <span class="sc">+</span></span>
-<span id="cb10-11"><a href=""></a>               personal_income <span class="sc">+</span> fy2012 <span class="sc">+</span> fy2016 <span class="sc">+</span> fy2020, <span class="at">data =</span> df_plm_total_log,</span>
+<span id="cb10-11"><a href=""></a>               personal_income <span class="sc">+</span> fy_2012 <span class="sc">+</span> fy_2016 <span class="sc">+</span> fy_2020, <span class="at">data =</span> df_plm_total_log,</span>
 <span id="cb10-12"><a href=""></a>               <span class="at">model =</span> <span class="st">"random"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
@@ -888,7 +896,7 @@ alternative hypothesis: one model is inconsistent</code></pre>
 
 Call:
 plm(formula = value ~ median_age + males_per_100_females + white_rate + 
-    personal_income + fy2012 + fy2016 + fy2020, data = df_plm_total_log, 
+    personal_income + fy_2012 + fy_2016 + fy_2020, data = df_plm_total_log, 
     model = "random")
 
 Balanced Panel: n = 51, T = 1, N = 204
@@ -910,9 +918,9 @@ median_age            -1.9987e-02  7.0839e-02  -0.2821    0.7778
 males_per_100_females -7.3769e-02  4.6562e-02  -1.5843    0.1131    
 white_rate            -1.3477e+00  1.0994e+00  -1.2259    0.2202    
 personal_income       -6.6892e-06  1.3464e-05  -0.4968    0.6193    
-fy2012                -1.6906e-01  9.3325e-03 -18.1148 &lt; 2.2e-16 ***
-fy2016                -1.2122e-01  9.3325e-03 -12.9886 &lt; 2.2e-16 ***
-fy2020                 1.4874e-02  9.3325e-03   1.5938    0.1110    
+fy_2012               -1.6906e-01  9.3325e-03 -18.1148 &lt; 2.2e-16 ***
+fy_2016               -1.2122e-01  9.3325e-03 -12.9886 &lt; 2.2e-16 ***
+fy_2020                1.4874e-02  9.3325e-03   1.5938    0.1110    
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -933,7 +941,7 @@ Chisq: 569.906 on 7 DF, p-value: &lt; 2.22e-16</code></pre>
 
 Call:
 plm(formula = value ~ median_age + males_per_100_females + white_rate + 
-    personal_income + fy2012 + fy2016 + fy2020, data = df_plm_total_log, 
+    personal_income + fy_2012 + fy_2016 + fy_2020, data = df_plm_total_log, 
     model = "within")
 
 Balanced Panel: n = 51, T = 1, N = 204
@@ -943,10 +951,10 @@ Residuals:
 -0.124909 -0.025087  0.001148  0.022474  0.121523 
 
 Coefficients:
-         Estimate Std. Error  t-value Pr(&gt;|t|)    
-fy2012 -0.1690568  0.0093325 -18.1148   &lt;2e-16 ***
-fy2016 -0.1212162  0.0093325 -12.9886   &lt;2e-16 ***
-fy2020  0.0148744  0.0093325   1.5938   0.1131    
+          Estimate Std. Error  t-value Pr(&gt;|t|)    
+fy_2012 -0.1690568  0.0093325 -18.1148   &lt;2e-16 ***
+fy_2016 -0.1212162  0.0093325 -12.9886   &lt;2e-16 ***
+fy_2020  0.0148744  0.0093325   1.5938   0.1131    
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -1018,7 +1026,7 @@ alternative hypothesis: one model is inconsistent</code></pre>
 
 Call:
 plm(formula = value ~ median_age + males_per_100_females + white_rate + 
-    personal_income + fy2012 + fy2016 + fy2020, data = df_plm_rep_log, 
+    personal_income + fy_2012 + fy_2016 + fy_2020, data = df_plm_rep_log, 
     model = "random")
 
 Balanced Panel: n = 51, T = 1, N = 204
@@ -1040,9 +1048,9 @@ median_age            -1.9605e-02  7.8726e-02  -0.2490  0.803338
 males_per_100_females -3.9829e-02  5.1746e-02  -0.7697  0.441482    
 white_rate            -7.9934e-01  1.2218e+00  -0.6542  0.512956    
 personal_income       -2.7651e-05  1.4963e-05  -1.8480  0.064608 .  
-fy2012                -2.1704e-01  1.3551e-02 -16.0164 &lt; 2.2e-16 ***
-fy2016                -1.9285e-01  1.3551e-02 -14.2311 &lt; 2.2e-16 ***
-fy2020                -3.4503e-02  1.3551e-02  -2.5462  0.010892 *  
+fy_2012               -2.1704e-01  1.3551e-02 -16.0164 &lt; 2.2e-16 ***
+fy_2016               -1.9285e-01  1.3551e-02 -14.2311 &lt; 2.2e-16 ***
+fy_2020               -3.4503e-02  1.3551e-02  -2.5462  0.010892 *  
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -1064,7 +1072,7 @@ Chisq: 397.896 on 7 DF, p-value: &lt; 2.22e-16</code></pre>
 
 Call:
 plm(formula = value ~ median_age + males_per_100_females + white_rate + 
-    personal_income + fy2012 + fy2016 + fy2020, data = df_plm_dem_log, 
+    personal_income + fy_2012 + fy_2016 + fy_2020, data = df_plm_dem_log, 
     model = "random")
 
 Balanced Panel: n = 51, T = 1, N = 204
@@ -1086,9 +1094,9 @@ median_age             2.1687e-02  7.3009e-02   0.2970 0.7664338
 males_per_100_females -8.6379e-02  4.7988e-02  -1.8000 0.0718591 .  
 white_rate            -2.0484e+00  1.1331e+00  -1.8079 0.0706224 .  
 personal_income        4.8128e-06  1.3876e-05   0.3468 0.7287132    
-fy2012                -1.1464e-01  1.6462e-02  -6.9637 3.315e-12 ***
-fy2016                -1.6667e-01  1.6462e-02 -10.1244 &lt; 2.2e-16 ***
-fy2020                 6.0095e-02  1.6462e-02   3.6505 0.0002617 ***
+fy_2012               -1.1464e-01  1.6462e-02  -6.9637 3.315e-12 ***
+fy_2016               -1.6667e-01  1.6462e-02 -10.1244 &lt; 2.2e-16 ***
+fy_2020                6.0095e-02  1.6462e-02   3.6505 0.0002617 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -1110,7 +1118,7 @@ Chisq: 249.908 on 7 DF, p-value: &lt; 2.22e-16</code></pre>
 
 Call:
 plm(formula = value ~ median_age + males_per_100_females + white_rate + 
-    personal_income + fy2012 + fy2016 + fy2020, data = df_plm_rep_rate_100, 
+    personal_income + fy_2012 + fy_2016 + fy_2020, data = df_plm_rep_rate_100, 
     model = "random")
 
 Balanced Panel: n = 51, T = 1, N = 204
@@ -1132,9 +1140,9 @@ median_age            -1.5609e-02  5.0640e-03 -3.0824  0.002053 **
 males_per_100_females  6.9461e-03  3.3285e-03  2.0868  0.036904 *  
 white_rate             3.0625e-01  7.8590e-02  3.8968 9.747e-05 ***
 personal_income       -6.5320e-06  9.6248e-07 -6.7866 1.148e-11 ***
-fy2012                -2.4943e-02  4.1573e-03 -5.9997 1.976e-09 ***
-fy2016                -4.7458e-03  4.1573e-03 -1.1415  0.253644    
-fy2020                -2.1887e-02  4.1573e-03 -5.2647 1.404e-07 ***
+fy_2012               -2.4943e-02  4.1573e-03 -5.9997 1.976e-09 ***
+fy_2016               -4.7458e-03  4.1573e-03 -1.1415  0.253644    
+fy_2020               -2.1887e-02  4.1573e-03 -5.2647 1.404e-07 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -1201,7 +1209,7 @@ F-statistic: 5.289 on 4 and 46 DF,  p-value: 0.001371</code></pre>
 </section>
 <section id="共和党投票数の自然対数の差を目的変数とした回帰分析ols" class="slide level2">
 <h2>共和党投票数の自然対数の差を目的変数とした回帰分析(OLS)</h2>
-<p><span class="math inline">\(ln(fy2024) - ln(fy2020) = ln(fy2024 / fy2020)\)</span></p>
+<p><span class="math inline">\(ln(fy_2024) - ln(fy_2020) = ln(fy_2024 / fy_2020)\)</span></p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -1230,7 +1238,7 @@ F-statistic: 2.735 on 4 and 46 DF,  p-value: 0.04006</code></pre>
 </section>
 <section id="民主党投票数の自然対数の差を目的変数とした回帰分析ols" class="slide level2">
 <h2>民主党投票数の自然対数の差を目的変数とした回帰分析(OLS)</h2>
-<p><span class="math inline">\(ln(fy2024) - ln(fy2020) = ln(fy2024 / fy2020)\)</span></p>
+<p><span class="math inline">\(ln(fy_2024) - ln(fy_2020) = ln(fy_2024 / fy_2020)\)</span></p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>
